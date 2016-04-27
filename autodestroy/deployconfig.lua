@@ -16,7 +16,7 @@ function getDeployConfig()
         entity_to_deploy = "destroyer",
         item_to_consume = "destroyer-capsule",
         entity_deploy_per_capsule = 5,
-        max_accepted_wastage = 5,
+        max_accepted_wastage = 1,
         min_capsules_remaining = 20
     }
 end
