@@ -31,7 +31,7 @@ function getEnemyWeightAround(player)
 
     local search_enemies = {
         area = search_area,
-        force = "enemy"
+        force = game.forces.enemy
     };
 
     local enemies = surface.find_entities_filtered(search_enemies);
