@@ -101,8 +101,8 @@ end
 function getNextDeployPosition(start_position, translation)
     return {
         x = start_position.x + translation.x,
-        y = start_position.y + translation.y;
-    }
+        y = start_position.y + translation.y
+    };
 end
 
 function deployEntity(player, item_name, item_position)
