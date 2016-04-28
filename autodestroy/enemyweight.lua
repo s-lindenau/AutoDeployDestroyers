@@ -55,6 +55,6 @@ function getEnemyWeightAround(player)
 end
 
 -- simple weight function based on remaining hitpoints of the enemy
-function getEnemyWeight(enemy_entitiy)
-    return enemy_entitiy.health;
+function getEnemyWeight(enemy_entity)
+    return enemy_entity.health;
 end
