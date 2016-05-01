@@ -12,7 +12,7 @@
 -- Anything above the biggest entry will deploy the 'max_follower_count' (134 in vanilla)
 local deployWeightConfig = {
     { weight = 100, deployCount = 5 },
-    { weight = 1000, deployCount = 25 },
+    { weight = 1000, deployCount = 10 },
     { weight = 5000, deployCount = 50 },
     { weight = 10000, deployCount = 100 },
     { weight = 12500, deployCount = 125 }
