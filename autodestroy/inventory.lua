@@ -3,7 +3,6 @@
 -- https://forums.factorio.com/memberlist.php?mode=viewprofile&u=16823
 -- Licence: GPLv3
 
-require("defines");
 require("autodestroy.vehicle");
 
 local vehicle_trunk_inventory = 2; -- defines.inventory.player_vehicle (7) doesn't work?
