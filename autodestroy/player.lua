@@ -39,7 +39,7 @@ end
 function getPowerArmor(armor_inventory)
     if (armor_inventory.is_empty() == false) then
         local armor = armor_inventory[1];
-        if (armor.has_grid == true) then
+        if (armor.grid ~= nil) then
             return armor;
         end
     end

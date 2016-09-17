@@ -29,6 +29,7 @@ data:extend({
             usage_priority = "secondary-input"
         },
         energy_consumption = "50kW",
-        movement_bonus = 0
+        movement_bonus = 0,
+        categories = {"armor"}
     }
 });
