@@ -4,6 +4,7 @@
 -- Licence: GPLv3
 
 require("prototypes.personaldestroyerlauncher");
+require("autodestroy.powerarmor");
 
 -- only deploy for players that have an active character in the game world
 function autoDeployActiveFor(player)
@@ -23,41 +24,4 @@ end
 
 function isCharacter(player)
     return player.controller_type == defines.controllers.character;
-end
-
-function hasDestroyerLauncher(player)
-    local armor_inventory = player.get_inventory(defines.inventory.player_armor);
-    local power_armor = getPowerArmor(armor_inventory);
-
-    if (hasDestroyerLauncherEquipment(power_armor)) then
-        return true;
-    else
-        return false;
-    end
-end
-
-function getPowerArmor(armor_inventory)
-    if (armor_inventory.is_empty() == false) then
-        local armor = armor_inventory[1];
-        if (armor.grid ~= nil) then
-            return armor;
-        end
-    end
-    return nil;
-end
-
-function hasDestroyerLauncherEquipment(power_armor)
-    if (power_armor ~= nil) then
-        local all_equipment = power_armor.grid.equipment;
-        for _, equipment in pairs(all_equipment) do
-            if isDestroyerLauncher(equipment) then
-                return true;
-            end
-        end
-    end
-    return false;
-end
-
-function isDestroyerLauncher(equipment)
-    return getPersonalDestroyerLauncherName() == equipment.name;
 end

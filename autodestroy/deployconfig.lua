@@ -11,12 +11,14 @@
 -- max_accepted_wastage: example:   if the target is 6 entities, and 1 capsule spawns 5, that would be a wastage of 4 entities
 --                                  the second capsule is only deployed if the wastage is not above the max accepted wastage
 -- min_capsules_remaining: how many capsules should always remain in the players inventory. Autodeploy stops if this amount (or lower) is reached
+-- max_capsules_per_pass: how many capsules 1 launcher may throw per pass. Stacks with multiple launchers in power armor
 function getDeployConfig()
     return {
         entity_to_deploy = "destroyer",
         item_to_consume = "destroyer-capsule",
         entity_deploy_per_capsule = 5,
         max_accepted_wastage = 1,
-        min_capsules_remaining = 20
+        min_capsules_remaining = 20,
+        max_capsules_per_pass = 100
     }
 end

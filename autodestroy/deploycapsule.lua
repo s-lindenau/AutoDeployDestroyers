@@ -7,6 +7,7 @@ require("autodestroy.deploypattern");
 require("autodestroy.deployconfig");
 require("autodestroy.deployweight");
 require("autodestroy.enemyweight");
+require("autodestroy.powerarmor");
 require("autodestroy.inventory");
 
 local debug_print = false;
@@ -42,7 +43,9 @@ function checkAndDeployFor(player)
 
     local capsules_to_consume = getCapsuleCount(deploy_to_reach_target, deploy_config.entity_deploy_per_capsule);
     local allowed_capsules_to_consume = math.min(player_capsule_count - deploy_config.min_capsules_remaining, capsules_to_consume)
-    local deploy_count_target = allowed_capsules_to_consume * deploy_config.entity_deploy_per_capsule;
+    local max_capsules_to_throw = getMaxCapsulesToThrow(player, deploy_config);
+    local max_allowed_capsules_to_consume = math.min(allowed_capsules_to_consume, max_capsules_to_throw);
+    local deploy_count_target = max_allowed_capsules_to_consume * deploy_config.entity_deploy_per_capsule;
 
     -- validate: after calculating actual deploy count, do we still need to deploy bots?
     deploy_count_target = getWastageCorrectedDeployCount(deploy_to_reach_target, deploy_count_target, deploy_config.max_accepted_wastage, deploy_config.entity_deploy_per_capsule)
@@ -125,4 +128,10 @@ function getWastageCorrectedDeployCount(deploy_to_reach_target, deploy_count_tar
         return deploy_count_target - (capsules_wasted * entity_deploy_per_capsule);
     end
     return deploy_count_target;
+end
+
+function getMaxCapsulesToThrow(player, deploy_config)
+    local number_of_launchers = getNumberOfDestroyerLaunchers(player);
+    local capsules_cap = deploy_config.max_capsules_per_pass;
+    return number_of_launchers * capsules_cap;
 end
