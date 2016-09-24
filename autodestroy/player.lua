@@ -3,7 +3,6 @@
 -- https://forums.factorio.com/memberlist.php?mode=viewprofile&u=16823
 -- Licence: GPLv3
 
-require("prototypes.personaldestroyerlauncher");
 require("autodestroy.powerarmor");
 
 -- only deploy for players that have an active character in the game world

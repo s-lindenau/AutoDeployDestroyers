@@ -3,6 +3,8 @@
 -- https://forums.factorio.com/memberlist.php?mode=viewprofile&u=16823
 -- Licence: GPLv3
 
+require("prototypes.personaldestroyerlauncher");
+
 function hasDestroyerLauncher(player)
     local number_of_launchers = getNumberOfDestroyerLaunchers(player);
     return number_of_launchers > 0;
