@@ -20,7 +20,7 @@ local deployWeightConfig = {
 
 function getDeployCountForWeight(weight, max_follower_count)
     if (weight == nil) then
-        return max_follower_count;
+        return 0;
     end
 
     table.sort(deployWeightConfig, deployWeightConfigComparator);
