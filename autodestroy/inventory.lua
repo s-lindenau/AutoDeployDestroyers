@@ -5,15 +5,13 @@
 
 require("autodestroy.vehicle");
 
-local vehicle_trunk_inventory = 2; -- defines.inventory.player_vehicle (7) doesn't work?
-
 -- return the total amount of the given item in the players inventories
 function getInventoryCount(player, item)
     local quickbar_count = getCount(player, defines.inventory.player_quickbar, item);
     local inventory_count = getCount(player, defines.inventory.player_main, item);
     local vehicle_count = 0;
     if (isInSupportedVehicle(player)) then
-        vehicle_count = getCount(player.vehicle, vehicle_trunk_inventory, item);
+        vehicle_count = getCount(player.vehicle, defines.inventory.car_trunk, item);
     end
     return quickbar_count + inventory_count + vehicle_count;
 end
@@ -28,7 +26,7 @@ function consumeFromInventory(player, consume_item, consume_count, min_remaining
     local consume_remaining = consume_count;
 
     if (isInSupportedVehicle(player)) then
-        local consumed = consume(player.vehicle, consume_item, consume_remaining, vehicle_trunk_inventory);
+        local consumed = consume(player.vehicle, consume_item, consume_remaining, defines.inventory.car_trunk);
         consume_remaining = consume_remaining - consumed;
     end
 
