@@ -10,7 +10,7 @@ require("autodestroy.enemyweight");
 require("autodestroy.powerarmor");
 require("autodestroy.inventory");
 
-local debug_print = false;
+local debug_print = true;
 local deploy_config = getDeployConfig();
 
 -- validates if we can & should deploy more capsules
@@ -41,15 +41,39 @@ function checkAndDeployFor(player)
     local deploy_for_weight = getDeployCountForWeight(enemy_weight, max_follower_count);
     local deploy_to_reach_target = math.max(0, deploy_for_weight - current_follower_count);
 
+    if debug_print then
+        player.print("-- Auto Deploy Debug --")
+        player.print("Biter weight in area: " .. enemy_weight .. " health")
+		player.print("Target destroyer count: " .. deploy_for_weight)
+		player.print("Deploy to reach target: " .. deploy_to_reach_target)
+    end
+
+	-- validate: if nothing needs to be deployed, stop early
+    if (deploy_to_reach_target <= 0) then
+        if debug_print then
+            player.print("Deploy to reach target is zero - do nothing")
+        end
+        return
+    end
+
     local capsules_to_consume = getCapsuleCount(deploy_to_reach_target, deploy_config.entity_deploy_per_capsule);
     local allowed_capsules_to_consume = math.min(player_capsule_count - deploy_config.min_capsules_remaining, capsules_to_consume)
     local max_capsules_to_throw = getMaxCapsulesToThrow(player, deploy_config);
     local max_allowed_capsules_to_consume = math.min(allowed_capsules_to_consume, max_capsules_to_throw);
     local deploy_count_target = max_allowed_capsules_to_consume * deploy_config.entity_deploy_per_capsule;
 
+    if debug_print then
+        player.print("Capsules to reach target: " .. capsules_to_consume)
+        player.print("Allowed capsules to consume: " .. allowed_capsules_to_consume)
+        player.print("Max allowed capsules to consume: " .. max_allowed_capsules_to_consume)
+        player.print("Deploy count target: " .. deploy_count_target)
+    end
     -- validate: after calculating actual deploy count, do we still need to deploy bots?
     deploy_count_target = getWastageCorrectedDeployCount(deploy_to_reach_target, deploy_count_target, deploy_config.max_accepted_wastage, deploy_config.entity_deploy_per_capsule)
     if (deploy_count_target <= 0) then
+        if debug_print then
+            player.print("Wastage corrected deploy count target is zero - do nothing")
+        end
         return;
     end
 
@@ -85,21 +109,12 @@ function checkAndDeployFor(player)
 
     local consumed_capsules = getCapsuleCount(deploy_count, deploy_config.entity_deploy_per_capsule);
     consumeFromInventory(player, deploy_config.item_to_consume, consumed_capsules, deploy_config.min_capsules_remaining);
-    printDebugInfo(player, enemy_weight, deploy_for_weight, deploy_to_reach_target, deploy_config.max_accepted_wastage, deploy_count, player_capsule_count, consumed_capsules)
-end
 
-function printDebugInfo(player, enemy_weight, deploy_for_weight, deploy_to_reach_target, max_accepted_wastage, deploy_count, player_capsule_count, consumed_capsules)
-    if (debug_print == true) then
-        player.print("-- Auto Deploy Debug --")
-        player.print("Biter weight in area: " .. enemy_weight);
-        player.print("Deploy for weight: " .. deploy_for_weight);
-        player.print("Deploy to reach: " .. deploy_to_reach_target);
-        player.print("Accepted wastage: " .. max_accepted_wastage)
-        player.print("Deployed: " .. deploy_count);
-        player.print("Available capsules: " .. player_capsule_count);
-        player.print("Capsules consumed: " .. consumed_capsules);
+    if debug_print then
+        player.print("Destroyers all deployed. Consumed capsules: " .. consumed_capsules)
     end
 end
+
 
 function getNextDeployPosition(start_position, translation)
     return {
