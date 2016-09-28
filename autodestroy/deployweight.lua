@@ -10,5 +10,5 @@ function getDeployCountForWeight(weight, max_follower_count)
 
     local deployCount = math.ceil(weight/300.0)
 
-    return max_follower_count;
+    return math.min(deployCount, max_follower_count)
 end
