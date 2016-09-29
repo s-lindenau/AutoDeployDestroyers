@@ -10,7 +10,7 @@ require("autodestroy.enemyweight");
 require("autodestroy.powerarmor");
 require("autodestroy.inventory");
 
-local debug_print = true;
+local debug_print = false;
 local deploy_config = getDeployConfig();
 
 -- validates if we can & should deploy more capsules
@@ -38,44 +38,80 @@ function checkAndDeployFor(player)
         return;
     end
 
-    local deploy_for_weight = getDeployCountForWeight(enemy_weight, max_follower_count);
-    local deploy_to_reach_target = math.max(0, deploy_for_weight - current_follower_count);
-
+	-- calculate the desired destroyer count - with no regargs for limits
+    local destroyers_for_weight = getDeployCountForWeight(enemy_weight)
     if debug_print then
         player.print("-- Auto Deploy Debug --")
         player.print("Biter weight in area: " .. enemy_weight .. " health")
-		player.print("Target destroyer count: " .. deploy_for_weight)
-		player.print("Deploy to reach target: " .. deploy_to_reach_target)
+		player.print("Destroyers for weight: " .. destroyers_for_weight .. " (not limited)")
+    end
+
+	-- limit the destroyer count to the player's max follower count
+	local target_destroyer_count = math.min(destroyers_for_weight,max_follower_count)
+    if debug_print then
+		player.print("Target destroyer count: " .. target_destroyer_count .. " (max followers " .. max_follower_count .. ")")
+	end
+
+    local deploy_to_reach_target = math.max(0, target_destroyer_count - current_follower_count)
+
+    if debug_print then
+		player.print("Current follower count: " .. current_follower_count .. ", deploy to reach target: " .. deploy_to_reach_target)
     end
 
 	-- validate: if nothing needs to be deployed, stop early
     if (deploy_to_reach_target <= 0) then
         if debug_print then
-            player.print("Deploy to reach target is zero - do nothing")
+            player.print("*** Deploy to reach target is zero - do nothing")
         end
         return
     end
 
-    local capsules_to_consume = getCapsuleCount(deploy_to_reach_target, deploy_config.entity_deploy_per_capsule);
-    local allowed_capsules_to_consume = math.min(player_capsule_count - deploy_config.min_capsules_remaining, capsules_to_consume)
-    local max_capsules_to_throw = getMaxCapsulesToThrow(player, deploy_config);
-    local max_allowed_capsules_to_consume = math.min(allowed_capsules_to_consume, max_capsules_to_throw);
-    local deploy_count_target = max_allowed_capsules_to_consume * deploy_config.entity_deploy_per_capsule;
+    local capsules_to_reach_target = getCapsuleCount(deploy_to_reach_target, deploy_config.entity_deploy_per_capsule)
+    if debug_print then
+        player.print("Capsules to reach target: " .. capsules_to_reach_target)
+	end
+
+	-- capsules are multiples of deploy_config.entity_deploy_per_capsule (i.e. 5), and capsules_to_reach_target is rounded up.
+	-- check if this would waste too many by exceeding the follower limit
+	local final_follower_count = current_follower_count + capsules_to_reach_target * deploy_config.entity_deploy_per_capsule
+	if (final_follower_count > max_follower_count + deploy_config.max_accepted_wastage) then
+		capsules_to_reach_target = capsules_to_reach_target - 1
+		if debug_print then
+			player.print("Final follower count would be " .. final_follower_count .. ", exceeding max followers " .. max_follower_count .. " + wastage " .. deploy_config.max_accepted_wastage)
+			player.print("- Reducing capsules to reach target to " .. capsules_to_reach_target)
+		end
+	else
+		if debug_print then
+			player.print("Final follower count will be " .. final_follower_count .. " (including wastage " .. deploy_config.max_accepted_wastage .. ")")
+		end
+	end
+
+    if (capsules_to_reach_target <= 0) then
+        if debug_print then
+            player.print("*** Capsules to reach target is zero - do nothing")
+        end
+        return
+    end
+
+    local allowed_capsules_to_consume = math.min(player_capsule_count - deploy_config.min_capsules_remaining, capsules_to_reach_target)
+    if debug_print then
+        player.print("Allowed capsules to consume: " .. allowed_capsules_to_consume .. " (inventory capsule count: " .. player_capsule_count .. ", min remaining " .. deploy_config.min_capsules_remaining .. ")")
+    end
+
+    local max_capsules_per_pass = getMaxCapsulesToThrow(player, deploy_config)
+	if (allowed_capsules_to_consume > max_capsules_per_pass) then
+		allowed_capsules_to_consume = max_capsules_per_pass
+		if debug_print then
+			player.print("Max capsules per pass limit exceeded - limiting to " .. max_capsules_per_pass)
+		end
+	end
+    local deploy_count_target = allowed_capsules_to_consume * deploy_config.entity_deploy_per_capsule
 
     if debug_print then
-        player.print("Capsules to reach target: " .. capsules_to_consume)
-        player.print("Allowed capsules to consume: " .. allowed_capsules_to_consume)
-        player.print("Max allowed capsules to consume: " .. max_allowed_capsules_to_consume)
-        player.print("Deploy count target: " .. deploy_count_target)
+        player.print("Deploy count target: " .. deploy_count_target .. " (" .. allowed_capsules_to_consume .. " capsules * " .. deploy_config.entity_deploy_per_capsule .. ")")
     end
-    -- validate: after calculating actual deploy count, do we still need to deploy bots?
-    deploy_count_target = getWastageCorrectedDeployCount(deploy_to_reach_target, deploy_count_target, deploy_config.max_accepted_wastage, deploy_config.entity_deploy_per_capsule)
-    if (deploy_count_target <= 0) then
-        if debug_print then
-            player.print("Wastage corrected deploy count target is zero - do nothing")
-        end
-        return;
-    end
+
+
 
     -- all validations passed; start deploying
     local deploy_count = 0;
@@ -111,7 +147,7 @@ function checkAndDeployFor(player)
     consumeFromInventory(player, deploy_config.item_to_consume, consumed_capsules, deploy_config.min_capsules_remaining);
 
     if debug_print then
-        player.print("Destroyers all deployed. Consumed capsules: " .. consumed_capsules)
+        player.print("*** Destroyers all deployed. Consumed capsules: " .. consumed_capsules)
     end
 end
 
@@ -136,14 +172,6 @@ function getCapsuleCount(deployed, deploy_per_capsule)
     return math.ceil(deployed / deploy_per_capsule);
 end
 
-function getWastageCorrectedDeployCount(deploy_to_reach_target, deploy_count_target, max_accepted_wastage, entity_deploy_per_capsule)
-    local wastage = math.max(0, deploy_count_target - deploy_to_reach_target)
-    local capsules_wasted = getCapsuleCount(wastage, entity_deploy_per_capsule);
-    if (wastage > max_accepted_wastage) then
-        return deploy_count_target - (capsules_wasted * entity_deploy_per_capsule);
-    end
-    return deploy_count_target;
-end
 
 function getMaxCapsulesToThrow(player, deploy_config)
     local number_of_launchers = getNumberOfDestroyerLaunchers(player);
