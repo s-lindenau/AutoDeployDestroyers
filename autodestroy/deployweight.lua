@@ -9,6 +9,5 @@ function getDeployCountForWeight(weight)
     end
 
     local deployCount = math.ceil(weight/300.0)
-
     return deployCount
 end
