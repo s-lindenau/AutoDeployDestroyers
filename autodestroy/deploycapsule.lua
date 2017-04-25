@@ -38,7 +38,7 @@ function checkAndDeployFor(player)
         return;
     end
 
-    -- calculate the desired destroyer count - with no regargs for limits
+    -- calculate the desired destroyer count - with no regards for limits
     local aggression_factor = math.max(0, deploy_config.aggression_factor);
     local destroyers_for_weight = getDeployCountForWeight(enemy_weight);
     destroyers_for_weight = math.ceil(destroyers_for_weight * aggression_factor);
