@@ -10,7 +10,7 @@ require("autodestroy.enemyweight");
 require("autodestroy.powerarmor");
 require("autodestroy.inventory");
 
-local debug_print = false;
+local debug_print = false; -- prints ingame debug information
 local deploy_config = getDeployConfig();
 
 -- validates if we can & should deploy more capsules
@@ -24,7 +24,8 @@ function checkAndDeployFor(player)
     end
 
     local max_follower_count = player.force.maximum_following_robot_count;
-    local current_follower_count = player.force.get_entity_count(deploy_config.entity_to_deploy); -- TODO: this works FORCE wide (so for all players of same force in MP).
+    local following_robots = player.following_robots;
+    local current_follower_count = #following_robots;
     local max_deploy_count = max_follower_count - current_follower_count;
 
     -- validate: can we deploy at least 1 capsule?

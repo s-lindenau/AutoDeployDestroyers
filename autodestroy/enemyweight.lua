@@ -4,7 +4,7 @@
 -- Licence: GPLv3
 
 local enemy_visibility_range = 30; -- is stored on the entity prototype, but not public on the LuaEntity(Prototype)
-local debug_log = false;
+local debug_log = false; -- writes enemy information to a log file
 
 -- returns the weight of all enemies in range
 function getEnemyWeightAround(player)
