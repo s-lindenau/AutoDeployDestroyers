@@ -11,6 +11,7 @@ data:extend({
         type = "item",
         name = getPersonalDestroyerLauncherName(),
         icon = getGraphicsDir() .. "/icons/" .. getPersonalDestroyerLauncherName() .. ".png",
+        icon_size = 32,
         placed_as_equipment_result = getPersonalDestroyerLauncherName(),
         flags = { "goes-to-main-inventory" },
         subgroup = "equipment",
