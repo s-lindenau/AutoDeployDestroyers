@@ -56,5 +56,9 @@ end
 
 -- simple weight function based on remaining hitpoints of the enemy
 function getEnemyWeight(enemy_entity)
-    return enemy_entity.health;
+    local enemy_health = enemy_entity.health;
+    if (enemy_health == nil) then
+        return 0;
+    end
+    return enemy_health;
 end

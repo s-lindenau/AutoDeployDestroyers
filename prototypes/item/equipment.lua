@@ -13,7 +13,6 @@ data:extend({
         icon = getGraphicsDir() .. "/icons/" .. getPersonalDestroyerLauncherName() .. ".png",
         icon_size = 32,
         placed_as_equipment_result = getPersonalDestroyerLauncherName(),
-        flags = { "goes-to-main-inventory" },
         subgroup = "equipment",
         order = "f[" .. getPersonalDestroyerLauncherName() .. "]-a[" .. getPersonalDestroyerLauncherName() .. "]",
         stack_size = 5
