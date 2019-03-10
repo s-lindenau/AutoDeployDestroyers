@@ -19,7 +19,6 @@ end
 -- priority:
 -- 1. Vehicle trunk
 -- 2. Main Inventory
--- 3. Quickbar
 -- This method does no validations, it expects the calling method to check availability (including min_remaining!)
 function consumeFromInventory(player, consume_item, consume_count, min_remaining)
     local consume_remaining = consume_count;

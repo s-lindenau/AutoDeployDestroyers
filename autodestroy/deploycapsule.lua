@@ -10,12 +10,11 @@ require("autodestroy.enemyweight");
 require("autodestroy.powerarmor");
 require("autodestroy.inventory");
 
-local debug_print = false; -- prints ingame debug information
-local deploy_config = getDeployConfig();
-
 -- validates if we can & should deploy more capsules
 -- if so, deploy & consume the capsules
 function checkAndDeployFor(player)
+    local deploy_config = getDeployConfig(player);
+    local debug_print = deploy_config.debug_print;
 
     -- validate: player has enough capsules?
     local player_capsule_count = getInventoryCount(player, deploy_config.item_to_consume);
@@ -34,7 +33,7 @@ function checkAndDeployFor(player)
     end
 
     -- validate: enemies around player require deployment?
-    local enemy_weight = getEnemyWeightAround(player);
+    local enemy_weight = getEnemyWeightAround(player, deploy_config);
     if (enemy_weight <= 0) then
         return;
     end
@@ -154,7 +153,6 @@ function checkAndDeployFor(player)
     end
 end
 
-
 function getNextDeployPosition(start_position, translation)
     return {
         x = start_position.x + translation.x,
@@ -174,7 +172,6 @@ end
 function getCapsuleCount(deployed, deploy_per_capsule)
     return math.ceil(deployed / deploy_per_capsule);
 end
-
 
 function getMaxCapsulesToThrow(player, deploy_config)
     local number_of_launchers = getNumberOfDestroyerLaunchers(player);

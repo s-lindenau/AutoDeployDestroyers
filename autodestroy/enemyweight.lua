@@ -3,11 +3,11 @@
 -- https://forums.factorio.com/memberlist.php?mode=viewprofile&u=16823
 -- Licence: GPLv3
 
-local enemy_visibility_range = 30; -- is stored on the entity prototype, but not public on the LuaEntity(Prototype)
-local debug_log = false; -- writes enemy information to a log file
-
 -- returns the weight of all enemies in range
-function getEnemyWeightAround(player)
+function getEnemyWeightAround(player, deploy_config)
+    local enemy_visibility_range = deploy_config.enemy_visibility_range; -- is stored on the entity prototype, but not public on the LuaEntity(Prototype)
+    local debug_log = deploy_config.debug_log;
+
     local surface = player.surface;
     local position = player.position;
     local force = player.force;

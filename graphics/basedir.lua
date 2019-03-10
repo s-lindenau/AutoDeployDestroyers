@@ -8,5 +8,5 @@ function getGraphicsDir()
 end
 
 function getBaseDir()
-    return "__Auto_Deploy_Destroyers__"
+    return "__Auto_Deploy_Destroyers__";
 end
