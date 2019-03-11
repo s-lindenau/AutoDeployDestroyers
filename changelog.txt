@@ -3,6 +3,7 @@ Version: 0.1.7
 Date: 26-02-2019
   Features:
     - Factorio version 0.17.x
+    - Updated science pack requirements
 ---------------------------------------------------------------------------------------------------
 Version: 0.1.6
 Date: 13-12-2017
