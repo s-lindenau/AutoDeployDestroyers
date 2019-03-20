@@ -35,10 +35,6 @@ function getAggressionFactorKey()
     return getPrefix() .. "aggression_factor";
 end
 
-function getEnemyVisibilityRange()
-    return getPrefix() .. "enemy_visibility_range";
-end
-
 function getDebugPrintKey()
     return getPrefix() .. "debug_print";
 end

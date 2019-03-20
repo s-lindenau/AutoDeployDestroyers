@@ -90,7 +90,7 @@ data:extend({
     },
     {
         type = "int-setting",
-        name = getEnemyVisibilityRange(),
+        name = getEnemyVisibilityRangeKey(),
         setting_type = "startup",
         default_value = 30,
         minimum_value = 1,
