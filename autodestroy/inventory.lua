@@ -7,7 +7,7 @@ require("autodestroy.vehicle");
 
 -- return the total amount of the given item in the players inventories
 function getInventoryCount(player, item)
-    local inventory_count = getCount(player, defines.inventory.player_main, item);
+    local inventory_count = getCount(player, defines.inventory.character_main, item);
     local vehicle_count = 0;
     if (isInSupportedVehicle(player)) then
         vehicle_count = getCount(player.vehicle, defines.inventory.car_trunk, item);
@@ -29,7 +29,7 @@ function consumeFromInventory(player, consume_item, consume_count, min_remaining
     end
 
     if (consume_remaining > 0) then
-        local consumed = consume(player, consume_item, consume_remaining, defines.inventory.player_main);
+        local consumed = consume(player, consume_item, consume_remaining, defines.inventory.character_main);
         consume_remaining = consume_remaining - consumed;
     end
 

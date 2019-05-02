@@ -11,7 +11,7 @@ function hasDestroyerLauncher(player)
 end
 
 function getPowerArmor(player)
-    local armor_inventory = player.get_inventory(defines.inventory.player_armor);
+    local armor_inventory = player.get_inventory(defines.inventory.character_armor);
     if (armor_inventory.is_empty() == false) then
         local armor = armor_inventory[1];
         if (armor.grid ~= nil) then
