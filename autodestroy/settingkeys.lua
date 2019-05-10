@@ -46,3 +46,7 @@ end
 function getEnemyVisibilityRangeKey()
     return getPrefix() .. "enemy_visibility_range";
 end
+
+function getMaxDispatchVehicleSpeedKey()
+    return getPrefix() .. "max_dispatch_vehicle_speed";
+end

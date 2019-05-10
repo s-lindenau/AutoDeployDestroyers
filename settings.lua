@@ -96,5 +96,13 @@ data:extend({
         minimum_value = 1,
         maximum_value = 100,
         order = "aj"
-    }
+    },
+    {
+        type = "double-setting",
+        name = getMaxDispatchVehicleSpeedKey(),
+        setting_type = "runtime-per-user",
+        default_value = 0.5,
+        minimum_value = 0.0,
+        order = "ag"
+    },
 });

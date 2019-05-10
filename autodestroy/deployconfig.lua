@@ -18,5 +18,6 @@ function getDeployConfig(player)
         debug_print = settings.get_player_settings(player)[getDebugPrintKey()].value,
         debug_log = settings.startup[getDebugLogKey()].value,
         enemy_visibility_range = settings.startup[getEnemyVisibilityRangeKey()].value,
+        max_dispatch_vehicle_speed = settings.get_player_settings(player)[getMaxDispatchVehicleSpeedKey()].value,
     }
 end

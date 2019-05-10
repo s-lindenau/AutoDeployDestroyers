@@ -16,6 +16,14 @@ function checkAndDeployFor(player)
     local deploy_config = getDeployConfig(player);
     local debug_print = deploy_config.debug_print;
 
+    -- validate: are we in a vehicle going too fast?
+    if (isDispatchAllowed(player, deploy_config) == false) then
+        if (debug_print) then
+            player.print("Auto Deploy disabled: vehicle speed too high");
+        end;
+        return;
+    end;
+
     -- validate: player has enough capsules?
     local player_capsule_count = getInventoryCount(player, deploy_config.item_to_consume);
     if (player_capsule_count <= deploy_config.min_capsules_remaining) then
@@ -177,4 +185,13 @@ function getMaxCapsulesToThrow(player, deploy_config)
     local number_of_launchers = getNumberOfDestroyerLaunchers(player);
     local capsules_cap = deploy_config.max_capsules_per_pass;
     return number_of_launchers * capsules_cap;
+end
+
+function isDispatchAllowed(player, deploy_config)
+    if (player.vehicle ~= nil) then
+        local vehicle_speed = player.vehicle.speed;
+        local max_dispatch_vehicle_speed = deploy_config.max_dispatch_vehicle_speed;
+        return math.abs(vehicle_speed) < max_dispatch_vehicle_speed;
+    end;
+    return true;
 end
