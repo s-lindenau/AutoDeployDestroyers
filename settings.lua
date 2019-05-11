@@ -101,7 +101,7 @@ data:extend({
         type = "double-setting",
         name = getMaxDispatchVehicleSpeedKey(),
         setting_type = "runtime-per-user",
-        default_value = 0.5,
+        default_value = 0.9,
         minimum_value = 0.0,
         order = "ag"
     },
