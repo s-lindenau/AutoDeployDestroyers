@@ -16,6 +16,8 @@
 -- debug_print: prints ingame debug information for the player
 -- debug_log: writes enemy information to a log file
 -- enemy_visibility_range: at what distance do enemies get triggered by the player and attack. This directly affects the scan distance and thus performance!
+-- max_dispatch_vehicle_speed: How fast can a player in a vehicle go until automatic deployment stops? Default of 0.9 is around 200 km/h.
+--                             Used to not deploy bots when passing biter bases at high speed assuming there is no intention to fight them, in for example (but not limited to) a train.
 
 require("autodestroy.settingkeys");
 
