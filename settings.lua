@@ -103,6 +103,6 @@ data:extend({
         setting_type = "runtime-per-user",
         default_value = 0.9,
         minimum_value = 0.0,
-        order = "ag"
+        order = "ak"
     },
 });
