@@ -1,8 +1,8 @@
 ---------------------------------------------------------------------------------------------------
 Version: 0.1.9
-Date: ??-??-20??
+Date: 21-01-2020
   Features:
-    - Factorio version ??
+    - Factorio version 0.18.x
     - Add configurable option to halt deployment when vehicle speed is too high
 ---------------------------------------------------------------------------------------------------
 Version: 0.1.8
