@@ -190,6 +190,9 @@ end
 function isDispatchAllowed(player, deploy_config)
     if (player.vehicle ~= nil) then
         local vehicle_speed = player.vehicle.speed;
+        if (vehicle_speed == nil) then
+            vehicle_speed = 0;
+        end
         local max_dispatch_vehicle_speed = deploy_config.max_dispatch_vehicle_speed;
         return math.abs(vehicle_speed) < max_dispatch_vehicle_speed;
     end;
