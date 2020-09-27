@@ -21,3 +21,10 @@ function getDeployConfig(player)
         max_dispatch_vehicle_speed = settings.get_player_settings(player)[getMaxDispatchVehicleSpeedKey()].value,
     }
 end
+
+function getStartupConfig()
+    return {
+        entity_to_deploy = settings.startup[getEntityToDeployKey()].value,
+        item_to_consume = settings.startup[getItemToConsumeKey()].value,
+    }
+end

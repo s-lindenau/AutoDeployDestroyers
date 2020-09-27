@@ -20,7 +20,7 @@ function autoDeployDestroyers()
 end
 
 function checkConfiguration()
-    local deploy_config = getDeployConfig(game.players[1]);
+    local deploy_config = getStartupConfig();
     local entity_to_deploy = game.entity_prototypes[deploy_config.entity_to_deploy];
     local item_to_consume = game.item_prototypes[deploy_config.item_to_consume];
     assert(entity_to_deploy, "Configured entity to deploy is not a valid game entity: " .. deploy_config.entity_to_deploy);
