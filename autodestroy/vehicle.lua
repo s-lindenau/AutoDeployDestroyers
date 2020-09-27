@@ -3,7 +3,7 @@
 -- https://forums.factorio.com/memberlist.php?mode=viewprofile&u=16823
 -- Licence: GPLv3
 
-local supported_vehicles = { "car", "tank" } -- vehicles that have trunk inventory (inclusive)
+local supported_vehicles = { "car", "tank", "spidertron" } -- vehicles that have trunk inventory (inclusive)
 local unsupported_vehicles = { "cargo", "locomotive" } -- vehicles that don't have trunk inventory (exclusive)
 
 -- is the player in a vehicle with a trunk (based on name.substring matches for vehicles from other mods)
