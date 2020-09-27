@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.0.1
+Date: 27-09-2020
+  Features:
+    - Support using capsules from Spidertron inventory
+    - Fix startup crash with the Editor Extensions mod
+---------------------------------------------------------------------------------------------------
 Version: 1.0.0
 Date: 14-08-2020
   Features:
