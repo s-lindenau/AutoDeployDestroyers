@@ -19,7 +19,7 @@ data:extend({
                 recipe = getPersonalDestroyerLauncherName()
             },
         },
-        prerequisites = { "power-armor", "combat-robotics-3" },
+        prerequisites = { "power-armor", "destroyer" },
         unit = {
             count = 100,
             ingredients = {
