@@ -11,13 +11,13 @@ Now you can completely focus on the battle!
 
 For a quick overview you can watch the following mod highlight video on YouTube by JD-Plays: https://www.youtube.com/watch?v=qhDUvHGGd08
 
-####This mod will activate when
+#### This mod will activate when
 - You have the "Destroyer Launcher" equipment in your power armor
 - You have enough destroyer capsules in your inventory (20+)
 - There are biters within visibility range (30 tiles)
 - Your current follower count is running below the target
 
-####Features include
+#### Features include
 - New technology & power armor equipment
 - Automatic and instantaneous deployment of destroyer drones
 - Target amount of destroyers based on simple biter weight function
