@@ -21,8 +21,8 @@ end
 
 function checkConfiguration()
     local deploy_config = getStartupConfig();
-    local entity_to_deploy = game.entity_prototypes[deploy_config.entity_to_deploy];
-    local item_to_consume = game.item_prototypes[deploy_config.item_to_consume];
+    local entity_to_deploy = prototypes.entity[deploy_config.entity_to_deploy];
+    local item_to_consume = prototypes.item[deploy_config.item_to_consume];
     assert(entity_to_deploy, "Configured entity to deploy is not a valid game entity: " .. deploy_config.entity_to_deploy);
     assert(item_to_consume, "Configured item to consume is not a valid game item: " .. deploy_config.item_to_consume)
 end

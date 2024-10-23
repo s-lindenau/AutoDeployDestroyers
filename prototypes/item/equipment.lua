@@ -12,7 +12,7 @@ data:extend({
         name = getPersonalDestroyerLauncherName(),
         icon = getGraphicsDir() .. "/icons/" .. getPersonalDestroyerLauncherName() .. ".png",
         icon_size = 32,
-        placed_as_equipment_result = getPersonalDestroyerLauncherName(),
+        place_as_equipment_result = getPersonalDestroyerLauncherName(),
         subgroup = "equipment",
         order = "f[" .. getPersonalDestroyerLauncherName() .. "]-a[" .. getPersonalDestroyerLauncherName() .. "]",
         stack_size = 5

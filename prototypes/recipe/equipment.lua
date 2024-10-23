@@ -13,11 +13,14 @@ data:extend({
         energy_required = 10,
         ingredients =
         {
-            { "processing-unit", 25 },
-            { "iron-gear-wheel", 10 },
-            { "steel-plate", 100 },
-            { "electric-engine-unit", 20 },
+            { type = "item", name = "processing-unit", amount = 25 },
+            { type = "item", name = "iron-gear-wheel", amount = 10 },
+            { type = "item", name = "steel-plate", amount = 100 },
+            { type = "item", name = "electric-engine-unit", amount = 20 }
         },
-        result = getPersonalDestroyerLauncherName()
+        results =
+        {
+            { type = "item", name = getPersonalDestroyerLauncherName(), amount = 1 }
+        }
     }
 });

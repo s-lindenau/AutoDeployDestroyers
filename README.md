@@ -27,3 +27,28 @@ For a quick overview you can watch the following mod highlight video on YouTube 
 - Will consume capsules from the following inventories: vehicle trunk and main inventory (in that order, if available)
 - Will warn you if it used your last capsules (up to a lower limit). This gives you time to retreat and restock.
 - Custom deploy patterns, just for fun.
+
+#### In-game settings include
+- `Aggression factor`: determines how many destroyers are deployed depending on the enemies around the player
+- `Minimum amount of capsules remaining`: when should auto deploy stop (defaults to 20 capsules)
+- `Maximum accepted "wastage" of capsules`: if the mod should wait until you need 5 more destroyers (1 capsule) to deploy that capsule (or if 4, 3 etc. is also acceptable). Configured as a whole number, that defaults to 1; meaning a capsule will be deployed when 4 more destroyers are needed.
+- ... see the in-game "mod settings" menu for more!
+
+
+### Frequently Asked Questions
+
+#### How does this mod work / why is nothing happening?
+Check if the following steps have been made:
+- Research the new technology added by this mod
+- Create the power armor equipment unlocked by the research
+- Put the equipment in the grid of your (active) personal power armor
+- Have more than 20 destroyer capsules in your inventory (number can be changed in mod settings)
+- Engage in battle with biters; the capsules should now be launched
+
+#### Can the equipment be used in autonomous vehicles?
+No, this mod is centered around players controlling a character in the world. The equipment must be in the grid of this character's power armor. Vehicles with equipment grids like the Spidertron or (modded) Trains are not supported.
+
+If the character is driving a vehicle, this mod will continue to work with the equipment in the power armor of the player. In that case destroyer capsules will also be used from the inventory of the vehicle.
+
+#### Can this mod be used in multiplayer?
+Yes
