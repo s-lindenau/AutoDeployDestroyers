@@ -7,16 +7,40 @@ function getPrefix()
     return "autodestroy_";
 end
 
-function getEntityToDeployKey()
-    return getPrefix() .. "entity_to_deploy";
+function getEntityToDeployDestroyerKey()
+    return getPrefix() .. "entity_to_deploy"; -- don't add `destroyer` for backwards compatibility
 end
 
-function getItemToConsumeKey()
-    return getPrefix() .. "item_to_consume";
+function getItemToConsumeDestroyerKey()
+    return getPrefix() .. "item_to_consume"; -- don't add `destroyer` for backwards compatibility
 end
 
-function getEntityToDeployPerCapsuleKey()
-    return getPrefix() .. "entity_deploy_per_capsule";
+function getEntityToDeployDistractorKey()
+    return getPrefix() .. "entity_to_deploy_distractor";
+end
+
+function getItemToConsumeDistractorKey()
+    return getPrefix() .. "item_to_consume_distractor";
+end
+
+function getEntityToDeployDefenderKey()
+    return getPrefix() .. "entity_to_deploy_defender";
+end
+
+function getItemToConsumeDefenderKey()
+    return getPrefix() .. "item_to_consume_defender";
+end
+
+function getEntityToDeployPerCapsuleDestroyerKey()
+    return getPrefix() .. "entity_deploy_per_capsule"; -- don't add `destroyer` for backwards compatibility
+end
+
+function getEntityToDeployPerCapsuleDistractorKey()
+    return getPrefix() .. "entity_deploy_per_capsule_distractor";
+end
+
+function getEntityToDeployPerCapsuleDefenderKey()
+    return getPrefix() .. "entity_deploy_per_capsule_defender";
 end
 
 function getMaxAcceptedWastageKey()
@@ -49,4 +73,8 @@ end
 
 function getMaxDispatchVehicleSpeedKey()
     return getPrefix() .. "max_dispatch_vehicle_speed";
+end
+
+function getStrictLauncherKey()
+    return getPrefix() .. "strict_launcher";
 end

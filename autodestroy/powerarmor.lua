@@ -5,12 +5,15 @@
 
 require("prototypes.personaldestroyerlauncher");
 
-function hasDestroyerLauncher(player)
-    local number_of_launchers = getNumberOfDestroyerLaunchers(player);
-    return number_of_launchers > 0;
+function hasAutoLauncher(player)
+    local number_of_destroyer_launchers = getNumberOfDestroyerLaunchers(player, true);
+    local number_of_distractor_launchers = getNumberOfDistractorLaunchers(player,true);
+    local number_of_defender_launchers = getNumberOfDefenderLaunchers(player,true);
+    local total_number_of_launchers = number_of_destroyer_launchers + number_of_distractor_launchers + number_of_defender_launchers;
+    return total_number_of_launchers > 0;
 end
 
-function getPowerArmor(player)
+function getGridArmor(player)
     local armor_inventory = player.get_inventory(defines.inventory.character_armor);
     if (armor_inventory.is_empty() == false) then
         local armor = armor_inventory[1];
@@ -21,13 +24,42 @@ function getPowerArmor(player)
     return nil;
 end
 
-function getNumberOfDestroyerLaunchers(player)
-    local power_armor = getPowerArmor(player);
+function getNumberOfDestroyerLaunchers(player, is_strict_launcher)
+    local grid_armor = getGridArmor(player);
+    local number_of_destroyer_launchers = getNumberOfArmorItemsMatchingName(grid_armor,  isDestroyerLauncher);
+    if not is_strict_launcher then
+        -- nothing here, as there currently are no bot types 'above' destroyers, but the function signature requires it
+    end
+    return number_of_destroyer_launchers;
+end
+
+function getNumberOfDistractorLaunchers(player, is_strict_launcher)
+    local grid_armor = getGridArmor(player);
+    local number_of_distractor_launchers = getNumberOfArmorItemsMatchingName(grid_armor,  isDistractorLauncher);
+    if not is_strict_launcher then
+        local number_of_destroyer_launchers = getNumberOfDestroyerLaunchers(player, true);
+        local number_of_defender_launchers = getNumberOfDefenderLaunchers(player, true);
+        number_of_distractor_launchers = number_of_distractor_launchers + number_of_destroyer_launchers + number_of_defender_launchers;
+    end
+    return number_of_distractor_launchers;
+end
+
+function getNumberOfDefenderLaunchers(player, is_strict_launcher)
+    local grid_armor = getGridArmor(player);
+    local number_of_defender_launchers = getNumberOfArmorItemsMatchingName(grid_armor,  isDefenderLauncher);
+    if not is_strict_launcher then
+        local number_of_destroyer_launchers = getNumberOfDestroyerLaunchers(player, true);
+        number_of_defender_launchers = number_of_defender_launchers + number_of_destroyer_launchers;
+    end
+    return number_of_defender_launchers;
+end
+
+function getNumberOfArmorItemsMatchingName(grid_armor, isTargetArmorEquipmentFunction)
     local number_of_launchers = 0;
-    if (power_armor ~= nil) then
-        local all_equipment = power_armor.grid.equipment;
+    if (grid_armor ~= nil) then
+        local all_equipment = grid_armor.grid.equipment;
         for _, equipment in pairs(all_equipment) do
-            if isDestroyerLauncher(equipment) then
+            if isTargetArmorEquipmentFunction(equipment) then
                 number_of_launchers = number_of_launchers + 1;
             end
         end
@@ -37,4 +69,12 @@ end
 
 function isDestroyerLauncher(equipment)
     return getPersonalDestroyerLauncherName() == equipment.name;
+end
+
+function isDistractorLauncher(equipment)
+    return getPersonalDistractorLauncherName() == equipment.name;
+end
+
+function isDefenderLauncher(equipment)
+    return getPersonalDefenderLauncherName() == equipment.name;
 end

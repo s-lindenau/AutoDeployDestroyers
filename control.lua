@@ -5,9 +5,10 @@
 
 require("autodestroy.player");
 require("autodestroy.deploycapsule");
+require("autodestroy.control_timing");
 
-local check_per_tick = 90;
-local tick_offset = 15;
+local check_per_tick = getCheckPerTick();
+local tick_offset = getTickOffset();
 
 function autoDeployDestroyers()
     if ((game.tick + tick_offset) % check_per_tick == 0) then
@@ -21,10 +22,16 @@ end
 
 function checkConfiguration()
     local deploy_config = getStartupConfig();
-    local entity_to_deploy = prototypes.entity[deploy_config.entity_to_deploy];
-    local item_to_consume = prototypes.item[deploy_config.item_to_consume];
-    assert(entity_to_deploy, "Configured entity to deploy is not a valid game entity: " .. deploy_config.entity_to_deploy);
-    assert(item_to_consume, "Configured item to consume is not a valid game item: " .. deploy_config.item_to_consume)
+    checkDeployConfiguration(deploy_config.entity_to_deploy_destroyer,deploy_config.item_to_consume_destroyer);
+    checkDeployConfiguration(deploy_config.entity_to_deploy_distractor,deploy_config.item_to_consume_distractor);
+    checkDeployConfiguration(deploy_config.entity_to_deploy_defender,deploy_config.item_to_consume_defender);
+end
+
+function checkDeployConfiguration(entity_to_deploy_name, item_to_consume_name)
+    local entity_to_deploy = prototypes.entity[entity_to_deploy_name];
+    local item_to_consume = prototypes.item[item_to_consume_name];
+    assert(entity_to_deploy, "Configured entity to deploy is not a valid game entity: " .. entity_to_deploy_name);
+    assert(item_to_consume, "Configured item to consume is not a valid game item: " .. item_to_consume_name);
 end
 
 script.on_event(defines.events.on_tick, autoDeployDestroyers)

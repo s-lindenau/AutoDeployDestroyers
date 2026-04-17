@@ -7,6 +7,22 @@ function getPersonalDestroyerLauncherName()
     return "personal-destroyer-launcher-equipment";
 end
 
+function getPersonalDistractorLauncherName()
+    return "personal-distractor-launcher-equipment";
+end
+
+function getPersonalDefenderLauncherName()
+    return "personal-defender-launcher-equipment";
+end
+
 function getAutomatedDestroyerDeploymentName()
     return "automated-destroyer-deployment";
+end
+
+function getAutomatedDistractorDeploymentName()
+    return "automated-distractor-deployment";
+end
+
+function getAutomatedDefenderDeploymentName()
+    return "automated-defender-deployment";
 end

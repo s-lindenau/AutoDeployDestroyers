@@ -31,5 +31,55 @@ data:extend({
         energy_consumption = "50kW",
         movement_bonus = 0,
         categories = {"armor"}
+    },
+    {
+        type = "movement-bonus-equipment", --not really, but ok.
+        name = getPersonalDistractorLauncherName(),
+        sprite =
+        {
+            filename = getGraphicsDir() .. "/equipment/" .. getPersonalDistractorLauncherName() .. ".png",
+            width = 64,
+            height = 64,
+            priority = "medium"
+        },
+        shape =
+        {
+            width = 2,
+            height = 2,
+            type = "full"
+        },
+        energy_source =
+        {
+            type = "electric",
+            usage_priority = "secondary-input"
+        },
+        energy_consumption = "30kW",
+        movement_bonus = 0,
+        categories = {"armor"}
+    },
+    {
+        type = "movement-bonus-equipment", --not really, but ok.
+        name = getPersonalDefenderLauncherName(),
+        sprite =
+        {
+            filename = getGraphicsDir() .. "/equipment/" .. getPersonalDefenderLauncherName() .. ".png",
+            width = 64,
+            height = 64,
+            priority = "medium"
+        },
+        shape =
+        {
+            width = 2,
+            height = 2,
+            type = "full"
+        },
+        energy_source =
+        {
+            type = "electric",
+            usage_priority = "secondary-input"
+        },
+        energy_consumption = "10kW",
+        movement_bonus = 0,
+        categories = {"armor"}
     }
 });

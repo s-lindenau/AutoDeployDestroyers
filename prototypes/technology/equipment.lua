@@ -32,5 +32,54 @@ data:extend({
             time = 30
         },
         order = "c-k-d-zz",
-    }
+    },
+    {
+        type = "technology",
+        name = getAutomatedDistractorDeploymentName(),
+        icon = getGraphicsDir() .. "/technology/" .. getAutomatedDistractorDeploymentName() .. ".png",
+        icon_size = 128,
+        effects =
+        {
+            {
+                type = "unlock-recipe",
+                recipe = getPersonalDistractorLauncherName()
+            },
+        },
+        prerequisites = { "modular-armor", "distractor" },
+        unit = {
+            count = 75,
+            ingredients = {
+                {"automation-science-pack", 1},
+                {"logistic-science-pack", 1},
+                {"chemical-science-pack", 1},
+                {"military-science-pack", 1}
+            },
+            time = 30
+        },
+        order = "c-k-d-zz",
+    },
+    {
+        type = "technology",
+        name = getAutomatedDefenderDeploymentName(),
+        icon = getGraphicsDir() .. "/technology/" .. getAutomatedDefenderDeploymentName() .. ".png",
+        icon_size = 128,
+        effects =
+        {
+            {
+                type = "unlock-recipe",
+                recipe = getPersonalDefenderLauncherName()
+            },
+        },
+        prerequisites = { "modular-armor", "defender" },
+        unit = {
+            count = 50,
+            ingredients = {
+                {"automation-science-pack", 1},
+                {"logistic-science-pack", 1},
+                {"military-science-pack", 1}
+            },
+            time = 30
+        },
+        order = "c-k-d-zz",
+    },
 });

@@ -16,5 +16,25 @@ data:extend({
         subgroup = "equipment",
         order = "f[" .. getPersonalDestroyerLauncherName() .. "]-a[" .. getPersonalDestroyerLauncherName() .. "]",
         stack_size = 5
+    },
+    {
+        type = "item",
+        name = getPersonalDistractorLauncherName(),
+        icon = getGraphicsDir() .. "/icons/" .. getPersonalDistractorLauncherName() .. ".png",
+        icon_size = 32,
+        place_as_equipment_result = getPersonalDistractorLauncherName(),
+        subgroup = "equipment",
+        order = "f[" .. getPersonalDistractorLauncherName() .. "]-a[" .. getPersonalDistractorLauncherName() .. "]",
+        stack_size = 5
+    },
+    {
+        type = "item",
+        name = getPersonalDefenderLauncherName(),
+        icon = getGraphicsDir() .. "/icons/" .. getPersonalDefenderLauncherName() .. ".png",
+        icon_size = 32,
+        place_as_equipment_result = getPersonalDefenderLauncherName(),
+        subgroup = "equipment",
+        order = "f[" .. getPersonalDefenderLauncherName() .. "]-a[" .. getPersonalDefenderLauncherName() .. "]",
+        stack_size = 5
     }
 });

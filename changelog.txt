@@ -1,4 +1,13 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.1.0
+Date: 17-04-2026
+  Features:
+    - Add support for Defender and Distractor launching
+    - Add new research and armor equipment for Defender and Distractor launchers
+    - Add new mod setting to enable/disable strict launch equipment
+    - Updated graphics to Factorio 2.x
+    - Tested compatibility with Factorio Space Age
+---------------------------------------------------------------------------------------------------
 Version: 2.0.0
 Date: 23-10-2024
   Features:

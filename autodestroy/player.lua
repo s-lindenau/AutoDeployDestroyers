@@ -9,7 +9,7 @@ require("autodestroy.powerarmor");
 function autoDeployActiveFor(player)
     if (isConnected(player)) then
         if (isCharacter(player)) then
-            if (hasDestroyerLauncher(player)) then
+            if (hasAutoLauncher(player)) then
                 return true;
             end
         end
