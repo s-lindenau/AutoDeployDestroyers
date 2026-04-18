@@ -22,9 +22,9 @@ end
 
 function checkConfiguration()
     local deploy_config = getStartupConfig();
-    checkDeployConfiguration(deploy_config.entity_to_deploy_destroyer,deploy_config.item_to_consume_destroyer);
-    checkDeployConfiguration(deploy_config.entity_to_deploy_distractor,deploy_config.item_to_consume_distractor);
-    checkDeployConfiguration(deploy_config.entity_to_deploy_defender,deploy_config.item_to_consume_defender);
+    checkDeployConfiguration(deploy_config.entity_to_deploy_destroyer, deploy_config.item_to_consume_destroyer);
+    checkDeployConfiguration(deploy_config.entity_to_deploy_distractor, deploy_config.item_to_consume_distractor);
+    checkDeployConfiguration(deploy_config.entity_to_deploy_defender, deploy_config.item_to_consume_defender);
 end
 
 function checkDeployConfiguration(entity_to_deploy_name, item_to_consume_name)
