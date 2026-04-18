@@ -7,7 +7,7 @@ function getDeployCountForWeightDestroyer(weight)
     if (weight == nil) then
         return 0;
     end
-    -- lower number = more bots per weight, higher number = less bots
+    -- lower denominator = more bots per weight, higher denominator = less bots
     local deployCount = math.ceil(weight/300.0) -- ceil: round up to the first whole number, so we never reach 0
     return deployCount
 end
@@ -16,7 +16,7 @@ function getDeployCountForWeightDistractor(weight)
     if (weight == nil) then
         return 0;
     end
-    -- lower number = more bots per weight, higher number = less bots
+    -- lower denominator = more bots per weight, higher denominator = less bots
     local deployCount = math.floor(weight/2000.0) -- floor: round down, so 0 can be reached to save distractors
     return deployCount
 end
