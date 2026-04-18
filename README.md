@@ -14,13 +14,13 @@ Now you can completely focus on the battle!
 For a quick overview you can watch the following mod highlight video on YouTube by JD-Plays: https://www.youtube.com/watch?v=qhDUvHGGd08
 
 #### This mod will activate when
-- You have the "[Destroyer/Defender/Distractor] Launcher" equipment in your power armor
+- You have the "[Destroyer/Defender/Distractor] Launcher" equipment in your armor grid
 - You have enough capsules in your inventory (20+)
 - There are biters within visibility range (30 tiles)
 - Your current follower count is running below the target
 
 #### Features include
-- New technology & power armor equipment
+- New technology & armor equipment
 - Automatic and instantaneous deployment of destroyer, defender or distractor drones
 - Target amount of drones based on simple biter weight function
 - Will keep your follower count at the desired target, with minimal wastage of capsules
@@ -35,21 +35,25 @@ For a quick overview you can watch the following mod highlight video on YouTube 
 - `Strict Launcher`: if a Destroyer launcher should only launch destroyers, or also previous bot types. Same for Defender and Distractor. Priority for 'previous' is Destroyer -> Defender -> Distractor.
 - ... see the in-game "mod settings" menu for more!
 
+#### Upgrade milestones
+- Also works in multiplayer as of version 0.1.6
+- Implemented mod settings as of version 0.1.8
+- Added defenders and distractors as of version 2.1.0
 
 ### Frequently Asked Questions
 
 #### How does this mod work / why is nothing happening?
 Check if the following steps have been made:
 - Research the new technology added by this mod
-- Create the power armor equipment unlocked by the research
-- Put the equipment in the grid of your (active) personal armor grid
+- Create the armor equipment unlocked by the research
+- Put the equipment in the grid of your (active) personal armor
 - Have more than 20 capsules in your inventory (number can be changed in mod settings)
 - Engage in battle with biters; the capsules should now be launched
 
 #### Can the equipment be used in autonomous vehicles?
-No, this mod is centered around players controlling a character in the world. The equipment must be in the grid of this character's power armor. Vehicles with equipment grids like the Spidertron or (modded) Trains are not supported.
+No, this mod is centered around players controlling a character in the world. The equipment must be in the grid of this character's armor. Vehicles with equipment grids like the Spidertron or (modded) Trains are not supported.
 
-If the character is driving a vehicle, this mod will continue to work with the equipment in the power armor of the player. In that case capsules will also be used from the inventory of the vehicle.
+If the character is driving a vehicle, this mod will continue to work with the equipment in the armor of the player. In that case capsules will also be used from the inventory of the vehicle.
 
 #### Can this mod be used in multiplayer?
 Yes
