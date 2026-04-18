@@ -43,13 +43,13 @@ function checkAndDeployFor(player)
     local max_follower_count = player.force.maximum_following_robot_count;
     local max_deploy_count = max_follower_count - getCurrentFollowerCount(player);
 
-    -- validate: can we deploy at least 1 capsule?
-    local can_deploy_destroyers = max_deploy_count < (deploy_config.entity_deploy_per_capsule_destroyer - deploy_config.max_accepted_wastage);
-    local can_deploy_distractors = max_deploy_count < (deploy_config.entity_deploy_per_capsule_distractor - deploy_config.max_accepted_wastage);
-    local can_deploy_defenders = max_deploy_count < (deploy_config.entity_deploy_per_capsule_defender - deploy_config.max_accepted_wastage);
-    if (can_deploy_destroyers or can_deploy_distractors or can_deploy_defenders) then
+    -- validate: can we deploy at least 1 capsule based on Max Follower Count vs Current Follow Count?
+    local can_not_deploy_destroyers = max_deploy_count < math.max(1, deploy_config.entity_deploy_per_capsule_destroyer - deploy_config.max_accepted_wastage);
+    local can_not_deploy_distractors = max_deploy_count < math.max(1,deploy_config.entity_deploy_per_capsule_distractor - deploy_config.max_accepted_wastage);
+    local can_not_deploy_defenders = max_deploy_count < math.max(1, deploy_config.entity_deploy_per_capsule_defender - deploy_config.max_accepted_wastage);
+    if (can_not_deploy_destroyers and can_not_deploy_distractors and can_not_deploy_defenders) then
         if (debug_print and debug_print_noise_reduction) then
-            player.print("Auto Deploy disabled: already enough bots deployed for enemies in range");
+            player.print("Auto Deploy disabled: max (acceptable) follower count reached");
         end;
         return;
     end
@@ -75,7 +75,7 @@ function checkAndDeployFor(player)
     if debug_print then
        player.print(" - Destroyers - ");
     end
-    local deploy_destroyers_config = {
+    local deploy_destroyers_context = {
         aggression_factor = aggression_factor,
         entity_deploy_per_capsule = deploy_config.entity_deploy_per_capsule_destroyer,
         entity_to_deploy = deploy_config.entity_to_deploy_destroyer,
@@ -87,12 +87,12 @@ function checkAndDeployFor(player)
         getDeployCountForWeightFunction = getDeployCountForWeightDestroyer,
         getNumberOfLaunchersFunction = getNumberOfDestroyerLaunchers,
     }
-    checkAndDeployCapsules(player, deploy_config, deploy_destroyers_config)
+    checkAndDeployCapsules(player, deploy_config, deploy_destroyers_context)
 
     if debug_print then
        player.print(" - Defenders - ");
     end
-    local deploy_defenders_config = {
+    local deploy_defenders_context = {
         aggression_factor = aggression_factor,
         entity_deploy_per_capsule = deploy_config.entity_deploy_per_capsule_defender,
         entity_to_deploy = deploy_config.entity_to_deploy_defender,
@@ -104,7 +104,7 @@ function checkAndDeployFor(player)
         getDeployCountForWeightFunction = getDeployCountForWeightDefender,
         getNumberOfLaunchersFunction = getNumberOfDefenderLaunchers,
     }
-    checkAndDeployCapsules(player, deploy_config, deploy_defenders_config)
+    checkAndDeployCapsules(player, deploy_config, deploy_defenders_context)
 
     -- Distractors are not following bots, so only as last resort.
     -- Distractors do not get counted for the player following bots, so we can't really (easily) monitor how many are currently deployed.
@@ -113,7 +113,7 @@ function checkAndDeployFor(player)
     if debug_print then
        player.print(" - Distractors - ");
     end
-    local deploy_distractors_config = {
+    local deploy_distractors_context = {
         aggression_factor = aggression_factor,
         entity_deploy_per_capsule = deploy_config.entity_deploy_per_capsule_distractor,
         entity_to_deploy = deploy_config.entity_to_deploy_distractor,
@@ -125,23 +125,23 @@ function checkAndDeployFor(player)
         getDeployCountForWeightFunction = getDeployCountForWeightDistractor,
         getNumberOfLaunchersFunction = getNumberOfDistractorLaunchers,
     }
-    checkAndDeployCapsules(player, deploy_config, deploy_distractors_config)
+    checkAndDeployCapsules(player, deploy_config, deploy_distractors_context)
 end
 
-function checkAndDeployCapsules(player, deploy_config, deploy_capsule_config)
+function checkAndDeployCapsules(player, deploy_config, deploy_capsule_context)
     local debug_print = deploy_config.debug_print;
 
-    local aggression_factor = deploy_capsule_config.aggression_factor;
-    local enemy_weight = deploy_capsule_config.enemy_weight;
-    local entity_deploy_per_capsule = deploy_capsule_config.entity_deploy_per_capsule;
-    local entity_to_deploy = deploy_capsule_config.entity_to_deploy;
-    local item_to_consume = deploy_capsule_config.item_to_consume;
-    local max_follower_count = deploy_capsule_config.max_follower_count;
-    local player_capsule_count = deploy_capsule_config.player_capsule_count;
-    local current_follower_count = deploy_capsule_config.current_follower_count;
+    local aggression_factor = deploy_capsule_context.aggression_factor;
+    local enemy_weight = deploy_capsule_context.enemy_weight;
+    local entity_deploy_per_capsule = deploy_capsule_context.entity_deploy_per_capsule;
+    local entity_to_deploy = deploy_capsule_context.entity_to_deploy;
+    local item_to_consume = deploy_capsule_context.item_to_consume;
+    local max_follower_count = deploy_capsule_context.max_follower_count;
+    local player_capsule_count = deploy_capsule_context.player_capsule_count;
+    local current_follower_count = deploy_capsule_context.current_follower_count;
 
     -- check if we have launchers for the current bot type
-    if deploy_capsule_config.getNumberOfLaunchersFunction(player) < 1 then
+    if deploy_capsule_context.getNumberOfLaunchersFunction(player) < 1 then
         if debug_print then
             player.print("No launchers for bot type in armor: " .. entity_to_deploy);
         end
@@ -149,7 +149,7 @@ function checkAndDeployCapsules(player, deploy_config, deploy_capsule_config)
     end;
 
     -- calculate the desired bot count - with no regards for limits
-    local destroyers_for_weight = deploy_capsule_config.getDeployCountForWeightFunction(enemy_weight);
+    local destroyers_for_weight = deploy_capsule_context.getDeployCountForWeightFunction(enemy_weight);
     destroyers_for_weight = math.ceil(destroyers_for_weight * aggression_factor);
 
     if debug_print then
@@ -208,7 +208,7 @@ function checkAndDeployCapsules(player, deploy_config, deploy_capsule_config)
         player.print("Allowed capsules to consume: " .. allowed_capsules_to_consume .. " (inventory capsule count: " .. player_capsule_count .. ", min remaining " .. deploy_config.min_capsules_remaining .. ")")
     end
 
-    local max_capsules_per_pass = getMaxCapsulesToThrow(player, deploy_config, deploy_capsule_config.getNumberOfLaunchersFunction)
+    local max_capsules_per_pass = getMaxCapsulesToThrow(player, deploy_config, deploy_capsule_context.getNumberOfLaunchersFunction)
     if (allowed_capsules_to_consume > max_capsules_per_pass) then
         allowed_capsules_to_consume = max_capsules_per_pass
         if debug_print then
@@ -221,7 +221,10 @@ function checkAndDeployCapsules(player, deploy_config, deploy_capsule_config)
         player.print("Deploy count target: " .. deploy_count_target .. " (" .. allowed_capsules_to_consume .. " capsules * " .. entity_deploy_per_capsule .. ")")
     end
 
-    if allowed_capsules_to_consume < 1 then
+    if allowed_capsules_to_consume <= 0 then
+        if debug_print then
+            player.print("*** Allowed capsules to reach target is zero - do nothing")
+        end
         return;
     end
 
