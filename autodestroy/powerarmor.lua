@@ -7,8 +7,8 @@ require("prototypes.personaldestroyerlauncher");
 
 function hasAutoLauncher(player)
     local number_of_destroyer_launchers = getNumberOfDestroyerLaunchers(player, true);
-    local number_of_distractor_launchers = getNumberOfDistractorLaunchers(player,true);
-    local number_of_defender_launchers = getNumberOfDefenderLaunchers(player,true);
+    local number_of_distractor_launchers = getNumberOfDistractorLaunchers(player, true);
+    local number_of_defender_launchers = getNumberOfDefenderLaunchers(player, true);
     local total_number_of_launchers = number_of_destroyer_launchers + number_of_distractor_launchers + number_of_defender_launchers;
     return total_number_of_launchers > 0;
 end
@@ -26,7 +26,7 @@ end
 
 function getNumberOfDestroyerLaunchers(player, is_strict_launcher)
     local grid_armor = getGridArmor(player);
-    local number_of_destroyer_launchers = getNumberOfArmorItemsMatchingName(grid_armor,  isDestroyerLauncher);
+    local number_of_destroyer_launchers = getNumberOfArmorItemsMatchingName(grid_armor, isDestroyerLauncher);
     if not is_strict_launcher then
         -- nothing here, as there currently are no bot types 'above' destroyers, but the function signature requires it
     end
@@ -35,7 +35,7 @@ end
 
 function getNumberOfDistractorLaunchers(player, is_strict_launcher)
     local grid_armor = getGridArmor(player);
-    local number_of_distractor_launchers = getNumberOfArmorItemsMatchingName(grid_armor,  isDistractorLauncher);
+    local number_of_distractor_launchers = getNumberOfArmorItemsMatchingName(grid_armor, isDistractorLauncher);
     if not is_strict_launcher then
         local number_of_destroyer_launchers = getNumberOfDestroyerLaunchers(player, true);
         local number_of_defender_launchers = getNumberOfDefenderLaunchers(player, true);
@@ -46,7 +46,7 @@ end
 
 function getNumberOfDefenderLaunchers(player, is_strict_launcher)
     local grid_armor = getGridArmor(player);
-    local number_of_defender_launchers = getNumberOfArmorItemsMatchingName(grid_armor,  isDefenderLauncher);
+    local number_of_defender_launchers = getNumberOfArmorItemsMatchingName(grid_armor, isDefenderLauncher);
     if not is_strict_launcher then
         local number_of_destroyer_launchers = getNumberOfDestroyerLaunchers(player, true);
         number_of_defender_launchers = number_of_defender_launchers + number_of_destroyer_launchers;
