@@ -5,7 +5,7 @@
 
 require("autodestroy.player");
 require("autodestroy.deploycapsule");
-require("autodestroy.control_timing");
+require("autodestroy.controltiming");
 
 local check_per_tick = getCheckPerTick();
 local tick_offset = getTickOffset();

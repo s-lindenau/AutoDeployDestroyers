@@ -16,6 +16,9 @@
 --
 -- Note for repeating patterns;
 -- after the last translation, the first translation should bring the position back to the original starting position
+
+require("autodestroy.controltiming");
+
 local deployPatterns = {
     {
         name = "Square",
@@ -126,6 +129,14 @@ local deployPatterns = {
 -- Pseudo-random to not break multiplayer.
 function getNextDeployPattern()
     local numberOfDeployPatterns = #deployPatterns;
-    local patternIndex = (game.tick / 60) % numberOfDeployPatterns;
-    return deployPatterns[math.floor(patternIndex) + 1];
+    local check_per_tick = getCheckPerTick()
+    local tick_offset = getTickOffset()
+
+    -- Adjust the game tick to account for the check_per_tick and tick_offset
+    local adjusted_tick = (game.tick + tick_offset) / check_per_tick
+
+    -- Calculate the pattern index based on the adjusted tick
+    local patternIndex = math.floor(adjusted_tick) % numberOfDeployPatterns;
+    -- Add 1 because Lua table index starts at 1 instead of 0
+    return deployPatterns[patternIndex + 1];
 end

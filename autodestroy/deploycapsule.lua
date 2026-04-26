@@ -9,7 +9,7 @@ require("autodestroy.deployweight");
 require("autodestroy.enemyweight");
 require("autodestroy.powerarmor");
 require("autodestroy.inventory");
-require("autodestroy.control_timing");
+require("autodestroy.controltiming");
 
 -- validates if we can & should deploy more capsules
 -- if so, deploy & consume the capsules
@@ -43,7 +43,7 @@ function checkAndDeployFor(player)
     local max_follower_count = player.force.maximum_following_robot_count;
     local max_deploy_count = max_follower_count - getCurrentFollowerCount(player);
 
-    -- validate: can we deploy at least 1 capsule based on Max Follower Count vs Current Follow Count?
+    -- validate: can we deploy at least 1 capsule based on Max Follower Count vs Current Follower Count?
     local can_not_deploy_destroyers = max_deploy_count < math.max(1, deploy_config.entity_deploy_per_capsule_destroyer - deploy_config.max_accepted_wastage);
     local can_not_deploy_distractors = max_deploy_count < math.max(1,deploy_config.entity_deploy_per_capsule_distractor - deploy_config.max_accepted_wastage);
     local can_not_deploy_defenders = max_deploy_count < math.max(1, deploy_config.entity_deploy_per_capsule_defender - deploy_config.max_accepted_wastage);
@@ -232,6 +232,10 @@ function checkAndDeployCapsules(player, deploy_config, deploy_capsule_context)
     local deploy_count = 0;
     local deploy_pattern = getNextDeployPattern();
     local player_position = player.position;
+
+    if debug_print then
+        player.print("Selected deploy pattern: " .. deploy_pattern.name);
+    end
 
     local deploy_position_offset = deploy_pattern.startPositionOffset;
     local start_position = getNextDeployPosition(player_position, deploy_position_offset)
