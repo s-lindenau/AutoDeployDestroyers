@@ -21,6 +21,10 @@ function getDeployConfig(player)
         enemy_visibility_range = settings.startup[getEnemyVisibilityRangeKey()].value,
         max_dispatch_vehicle_speed = settings.get_player_settings(player)[getMaxDispatchVehicleSpeedKey()].value,
         strict_launcher = settings.get_player_settings(player)[getStrictLauncherKey()].value,
+        recall_enabled = settings.get_player_settings(player)[getBotRecallEnabledKey()].value,
+        recall_range = settings.startup[getBotRecallRangeKey()].value,
+        recall_lifetime = settings.get_player_settings(player)[getBotRecallMaxLifetimeKey()].value,
+        tooltip_enabled = settings.get_player_settings(player)[getTooltipMessagesEnabledKey()].value,
     }
     return getMergedTables(deploy_config_startup, deploy_config_player);
 end

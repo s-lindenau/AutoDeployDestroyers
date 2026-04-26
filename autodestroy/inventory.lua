@@ -16,28 +16,19 @@ function getInventoryCount(player, item)
 end
 
 -- consume the given item from the players available inventories
--- priority:
--- 1. Vehicle trunk
--- 2. Main Inventory
 -- This method does no validations, it expects the calling method to check availability (including min_remaining!)
+-- This method returns the successful removed amount so calling logic can postprocess
 function consumeFromInventory(player, consume_item, consume_count, min_remaining)
-    local consume_remaining = consume_count;
-
-    if (isInSupportedVehicle(player)) then
-        local consumed = consume(player.vehicle, consume_item, consume_remaining, defines.inventory.car_trunk);
-        consume_remaining = consume_remaining - consumed;
-    end
-
-    if (consume_remaining > 0) then
-        local consumed = consume(player, consume_item, consume_remaining, defines.inventory.character_main);
-        consume_remaining = consume_remaining - consumed;
-    end
+    remaining_to_consume = processPlayerInventories(player, consume_item, consume_count, consume);
 
     -- WARN player when lower limit reached
     local remaining_count = getInventoryCount(player, consume_item);
     if (remaining_count <= min_remaining) then
         player.print("Warning: " .. consume_item .. " count is running low. Only " .. remaining_count .. " left! Please restock for auto-deploy.")
     end
+
+    local consumed_count = consume_count - remaining_to_consume;
+    return consumed_count;
 end
 
 -- consume (item * amount) from the given inventory
@@ -59,7 +50,8 @@ function consumeStack(entity, inventory_index, consume_item, consume_amount)
         name = consume_item,
         count = consume_amount
     };
-    return inventory.remove(stackToRemove);
+    local consumed_amount = inventory.remove(stackToRemove);
+    return consumed_amount;
 end
 
 -- return the amount of the given item in the specific inventory
@@ -70,4 +62,51 @@ function getCount(entity, inventory_index, item)
     else
         return 0;
     end;
+end
+
+-- insert the given item into the players available inventories
+-- This method only validates available inventory space, it expects the calling method to check if insert is functionally allowed
+-- This method also does not remove any other game entities, it returns the successful insertion amount so calling logic can postprocess
+function insertIntoInventory(player, insert_item, insert_count)
+    local remaining_count = processPlayerInventories(player, insert_item, insert_count, insert);
+    local inserted_count = insert_count - remaining_count;
+    return inserted_count;
+end
+
+-- api call: LuaInventory.html#can_insert
+-- api call: LuaInventory.html#insert
+-- return the actual amount inserted
+function insert(entity, insert_item, insert_amount, inventory_index)
+    local inventory = entity.get_inventory(inventory_index);
+    local insert_stack = {
+        name = insert_item,
+        count = insert_amount
+    }
+    local can_insert = inventory.can_insert(insert_stack);
+    if not can_insert then
+        return 0;
+    end;
+
+    local inserted_amount = inventory.insert(insert_stack);
+    return inserted_amount;
+end
+
+-- Consume or Insert from/to player inventory. Priority:
+-- 1. Vehicle trunk
+-- 2. Main Inventory
+-- returns the remaining amount (when not all amounts requested could be processed)
+function processPlayerInventories(player, item, amount, inventoryFunction)
+    local remaining = amount;
+    -- first: process car trunk if available
+    if (isInSupportedVehicle(player)) then
+        local amount_processed = inventoryFunction(player.vehicle, item, remaining, defines.inventory.car_trunk);
+        remaining = remaining - amount_processed;
+    end
+
+    -- second: process player main inventory if still needed
+    if (remaining > 0) then
+        local amount_processed = inventoryFunction(player, item, remaining, defines.inventory.character_main);
+        remaining = remaining - amount_processed;
+    end
+    return remaining;
 end

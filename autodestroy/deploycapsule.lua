@@ -10,6 +10,8 @@ require("autodestroy.enemyweight");
 require("autodestroy.powerarmor");
 require("autodestroy.inventory");
 require("autodestroy.controltiming");
+require("autodestroy.recall");
+require("autodestroy.tooltip");
 
 -- validates if we can & should deploy more capsules
 -- if so, deploy & consume the capsules
@@ -26,6 +28,21 @@ function checkAndDeployFor(player)
         return;
     end;
 
+    local max_follower_count = player.force.maximum_following_robot_count;
+    local current_follower_count = getCurrentFollowerCount(player);
+    local max_deploy_count = max_follower_count - current_follower_count;
+
+    -- validate: enemies around player require deployment?
+    local enemy_weight = getEnemyWeightAround(player, deploy_config);
+    -- check if we can recall bots at this moment that are deployed but no longer needed
+    checkAndRecallBots(player, deploy_config, enemy_weight, current_follower_count);
+    if (enemy_weight <= 0) then
+        if (debug_print and debug_print_noise_reduction) then
+            player.print("Auto Deploy disabled: not enough enemies in range");
+        end;
+        return;
+    end
+
     -- validate: player has enough capsules?
     local player_capsule_count_destroyer = getInventoryCount(player, deploy_config.item_to_consume_destroyer);
     local player_capsule_count_distractor = getInventoryCount(player, deploy_config.item_to_consume_distractor);
@@ -40,9 +57,6 @@ function checkAndDeployFor(player)
         return
     end
 
-    local max_follower_count = player.force.maximum_following_robot_count;
-    local max_deploy_count = max_follower_count - getCurrentFollowerCount(player);
-
     -- validate: can we deploy at least 1 capsule based on Max Follower Count vs Current Follower Count?
     local can_not_deploy_destroyers = max_deploy_count < math.max(1, deploy_config.entity_deploy_per_capsule_destroyer - deploy_config.max_accepted_wastage);
     local can_not_deploy_distractors = max_deploy_count < math.max(1,deploy_config.entity_deploy_per_capsule_distractor - deploy_config.max_accepted_wastage);
@@ -54,19 +68,10 @@ function checkAndDeployFor(player)
         return;
     end
 
-    -- validate: enemies around player require deployment?
-    local enemy_weight = getEnemyWeightAround(player, deploy_config);
-    if (enemy_weight <= 0) then
-        if (debug_print and debug_print_noise_reduction) then
-            player.print("Auto Deploy disabled: not enough enemies in range");
-        end;
-        return;
-    end
-
     local aggression_factor = math.max(0, deploy_config.aggression_factor);
 
     if debug_print then
-        player.print("-- Auto Deploy Debug --")
+        player.print("--- [Auto Deploy Debug] ---")
         player.print("Biter weight in area: " .. enemy_weight);
         player.print("Aggression Factor: " .. aggression_factor);
     end
@@ -81,11 +86,12 @@ function checkAndDeployFor(player)
         entity_to_deploy = deploy_config.entity_to_deploy_destroyer,
         item_to_consume = deploy_config.item_to_consume_destroyer,
         max_follower_count = max_follower_count,
-        current_follower_count = getCurrentFollowerCount(player), -- recalculate follower count, may have increased
+        current_follower_count = getCurrentFollowerCount(player), -- recalculate follower count, may have changed
         enemy_weight = enemy_weight,
         player_capsule_count = player_capsule_count_destroyer,
         getDeployCountForWeightFunction = getDeployCountForWeightDestroyer,
         getNumberOfLaunchersFunction = getNumberOfDestroyerLaunchers,
+        tooltip_offset = 0,
     }
     checkAndDeployCapsules(player, deploy_config, deploy_destroyers_context)
 
@@ -98,11 +104,12 @@ function checkAndDeployFor(player)
         entity_to_deploy = deploy_config.entity_to_deploy_defender,
         item_to_consume = deploy_config.item_to_consume_defender,
         max_follower_count = max_follower_count,
-        current_follower_count = getCurrentFollowerCount(player), -- recalculate follower count, may have increased
+        current_follower_count = getCurrentFollowerCount(player), -- recalculate follower count, may have changed
         enemy_weight = enemy_weight,
         player_capsule_count = player_capsule_count_defender,
         getDeployCountForWeightFunction = getDeployCountForWeightDefender,
         getNumberOfLaunchersFunction = getNumberOfDefenderLaunchers,
+        tooltip_offset = 1,
     }
     checkAndDeployCapsules(player, deploy_config, deploy_defenders_context)
 
@@ -119,11 +126,12 @@ function checkAndDeployFor(player)
         entity_to_deploy = deploy_config.entity_to_deploy_distractor,
         item_to_consume = deploy_config.item_to_consume_distractor,
         max_follower_count = max_follower_count,
-        current_follower_count = getCurrentFollowerCount(player), -- recalculate follower count, may have increased
+        current_follower_count = getCurrentFollowerCount(player), -- recalculate follower count, may have changed
         enemy_weight = enemy_weight,
         player_capsule_count = player_capsule_count_distractor,
         getDeployCountForWeightFunction = getDeployCountForWeightDistractor,
         getNumberOfLaunchersFunction = getNumberOfDistractorLaunchers,
+        tooltip_offset = 2,
     }
     checkAndDeployCapsules(player, deploy_config, deploy_distractors_context)
 end
@@ -139,6 +147,7 @@ function checkAndDeployCapsules(player, deploy_config, deploy_capsule_context)
     local max_follower_count = deploy_capsule_context.max_follower_count;
     local player_capsule_count = deploy_capsule_context.player_capsule_count;
     local current_follower_count = deploy_capsule_context.current_follower_count;
+    local tooltip_offset = deploy_capsule_context.tooltip_offset;
 
     -- check if we have launchers for the current bot type
     if deploy_capsule_context.getNumberOfLaunchersFunction(player) < 1 then
@@ -263,10 +272,15 @@ function checkAndDeployCapsules(player, deploy_config, deploy_capsule_context)
     end
 
     local consumed_capsules = getCapsuleCount(deploy_count, entity_deploy_per_capsule);
-    consumeFromInventory(player, item_to_consume, consumed_capsules, deploy_config.min_capsules_remaining);
+    local total_consumed = consumeFromInventory(player, item_to_consume, consumed_capsules, deploy_config.min_capsules_remaining);
+
+    if(total_consumed >= 1) then
+        showTooltipConsumedSuccessful(player, deploy_config, item_to_consume, total_consumed, tooltip_offset);
+        tooltip_offset = tooltip_offset + getTooltipOffsetStep();
+    end
 
     if debug_print then
-        player.print("*** Bots all deployed. Consumed capsules: " .. consumed_capsules)
+        player.print("*** Bots all deployed. Consumed capsules: " .. total_consumed)
     end
 end
 
@@ -288,13 +302,6 @@ end
 
 function getCapsuleCount(deployed, deploy_per_capsule)
     return math.ceil(deployed / deploy_per_capsule);
-end
-
-function getMaxCapsulesToThrow(player, deploy_config, getNumberOfLaunchersFunction)
-    local is_strict_launcher = deploy_config.strict_launcher;
-    local number_of_launchers = getNumberOfLaunchersFunction(player, is_strict_launcher);
-    local capsules_cap = deploy_config.max_capsules_per_pass;
-    return number_of_launchers * capsules_cap;
 end
 
 function isDispatchAllowed(player, deploy_config)

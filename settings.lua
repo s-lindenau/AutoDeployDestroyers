@@ -142,4 +142,37 @@ data:extend({
         default_value = true,
         order = "al"
     },
+    {
+        type = "bool-setting",
+        name = getBotRecallEnabledKey(),
+        setting_type = "runtime-per-user",
+        default_value = true,
+        order = "ama"
+    },
+    {
+        type = "int-setting",
+        name = getBotRecallRangeKey(),
+        setting_type = "startup",
+        default_value = 5,
+        minimum_value = 1,
+        maximum_value = 100,
+        order = "amb"
+    },
+    {
+        type = "int-setting",
+        name = getBotRecallMaxLifetimeKey(),
+        setting_type = "runtime-per-user",
+        -- would like this to be a slider, but not (yet) implemented: https://forums.factorio.com/viewtopic.php?t=127837
+        default_value = 50,
+        minimum_value = 0,
+        maximum_value = 100,
+        order = "amc"
+    },
+    {
+        type = "bool-setting",
+        name = getTooltipMessagesEnabledKey(),
+        setting_type = "runtime-per-user",
+        default_value = true,
+        order = "an"
+    },
 });

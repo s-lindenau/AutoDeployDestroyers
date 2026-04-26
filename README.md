@@ -26,6 +26,7 @@ For a quick overview you can watch the following mod highlight video on YouTube 
 - Will keep your follower count at the desired target, with minimal wastage of capsules
 - Will consume capsules from the following inventories: vehicle trunk and main inventory (in that order, if available)
 - Will warn you if it used your last capsules (up to a lower limit). This gives you time to retreat and restock.
+- Will recall bots back into capsules in your inventory when the battle is over (if they have 50% or more lifetime left, configurable).
 - Custom deploy patterns, just for fun.
 
 #### In-game settings include
@@ -57,3 +58,7 @@ If the character is driving a vehicle, this mod will continue to work with the e
 
 #### Can this mod be used in multiplayer?
 Yes
+
+#### Why are bots not (all) recalled back to inventory?
+A capsule must be fully filled for recall to work, and the bots must still have over half their lifetime (configurable %) left.
+So it is possible that a few bots, or those that are too old, can no longer be recalled.

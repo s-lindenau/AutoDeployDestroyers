@@ -78,3 +78,19 @@ end
 function getStrictLauncherKey()
     return getPrefix() .. "strict_launcher";
 end
+
+function getBotRecallEnabledKey()
+    return getPrefix() .. "bot_recall_enabled";
+end
+
+function getBotRecallRangeKey()
+    return getPrefix() .. "bot_recall_range";
+end
+
+function getBotRecallMaxLifetimeKey()
+    return getPrefix() .. "bot_recall_max_lifetime";
+end
+
+function getTooltipMessagesEnabledKey()
+    return getPrefix() .. "tooltip_messages_enabled";
+end
