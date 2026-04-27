@@ -62,3 +62,10 @@ Yes
 #### Why are bots not (all) recalled back to inventory?
 A capsule must be fully filled for recall to work, and the bots must still have over half their lifetime (configurable %) left.
 So it is possible that a few bots, or those that are too old, can no longer be recalled.
+
+#### I don't like how feature X works, can I change it?
+Many features in this mod have settings you can tweak to adjust the functionality.  
+Check the in-game mod settings menu: `Settings` → `Mod Settings`.  
+This mod adds options to categories `Startup`, `Map` and `Per player`.
+
+You can also strategically place or remove armor equipment to enable or disable certain features.

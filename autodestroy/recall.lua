@@ -148,7 +148,7 @@ function canRecallBot(player, deploy_config, recall_context, bot)
 
     -- Factorio filters and only shows unique messages per x seconds, so this won't spam too much
     if (deploy_config.debug_print) then
-        local message = " -- Recall: %s base_life=%s modifier=%s max_life=%s current_life=%s threshold=%s test";
+        local message = " -- Recall: %s base_life=%s modifier=%s max_life=%s current_life=%s threshold=%s";
         printf(player, message, bot.name, base_life, modifier, max_life, current_life, lifetime_threshold);
     end
 
