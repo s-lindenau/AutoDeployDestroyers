@@ -6,6 +6,7 @@
 require("autodestroy.inventory");
 require("autodestroy.tooltip");
 require("autodestroy.powerarmor");
+require("autodestroy.printf");
 
 -- Perform a 'Total Recall' of active bots when the battle has ended
 function checkAndRecallBots(player, deploy_config, enemy_weight, current_follower_count)
@@ -146,8 +147,9 @@ function canRecallBot(player, deploy_config, recall_context, bot)
     local current_life = bot.time_to_live;
 
     -- Factorio filters and only shows unique messages per x seconds, so this won't spam too much
-    if(deploy_config.debug_print) then
-        player.print(" -- Recall: " .. bot.name .. " base_life=" .. base_life .. " modifier=" .. modifier .. " max_life=" .. max_life .. " current_life=" .. current_life .. " threshold=" .. lifetime_threshold);
+    if (deploy_config.debug_print) then
+        local message = " -- Recall: %s base_life=%s modifier=%s max_life=%s current_life=%s threshold=%s test";
+        printf(player, message, bot.name, base_life, modifier, max_life, current_life, lifetime_threshold);
     end
 
     if current_life < lifetime_threshold then
