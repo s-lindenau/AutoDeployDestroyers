@@ -67,7 +67,7 @@ function checkAndRecallBots(player, deploy_config, enemy_weight, current_followe
     recall_context[deploy_config.entity_to_deploy_distractor] = getLifetimeThresholdForBotType(player, deploy_config, distractor_prototype);
 
     -- group bots that can be recalled by type and count the number of capsules
-    local bot_statistics = getCapsuleCountPerBotType(player, deploy_config, recall_context,bots, units_per_capsule);
+    local bot_statistics = getCapsuleCountPerBotType(player, deploy_config, recall_context, bots, units_per_capsule);
 
     -- if we reach here, there are still follower bots on the player, but they may not be in range to recall
     local bots_in_range = bot_statistics.total_bots;
@@ -112,7 +112,7 @@ function getCapsuleCountPerBotType(player, deploy_config, recall_context, bots, 
 
     -- Count bots by type that can be recalled
     for _, bot in pairs(bots) do
-        if canRecallBot(player, deploy_config, recall_context,bot) then
+        if canRecallBot(player, deploy_config, recall_context, bot) then
             local bot_name = bot.name;
             bot_counts[bot_name] = (bot_counts[bot_name] or 0) + 1;
             table.insert(bots_per_type[bot_name], bot);
