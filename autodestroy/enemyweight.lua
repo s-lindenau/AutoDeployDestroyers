@@ -3,6 +3,34 @@
 -- https://forums.factorio.com/memberlist.php?mode=viewprofile&u=16823
 -- Licence: GPLv3
 
+--- @class EnemyWeightClass
+--- @field player LuaPlayer
+--- @field deploy_config
+--- @field weight double
+function getEnemyWeightClass(player, deploy_config)
+    return {
+        player = player,
+        deploy_config = deploy_config,
+        weight = nil
+    }
+end
+
+--- @param enemyWeightInstance EnemyWeightClass
+function getEnemyWeightLazyLoaded(enemyWeightInstance)
+    -- 1. Check if we already have the weight value
+    local weight = enemyWeightInstance.weight
+    if weight then
+        return weight
+    end
+
+    -- 2. Populate if nil
+    weight = getEnemyWeightAround(enemyWeightInstance.player, enemyWeightInstance.deploy_config);
+
+    -- 3. Cache it back into the object
+    enemyWeightInstance.weight = weight;
+    return weight
+end
+
 -- returns the weight of all enemies in range
 function getEnemyWeightAround(player, deploy_config)
     local enemy_visibility_range = deploy_config.enemy_visibility_range; -- is stored on the entity prototype, but not public on the LuaEntity(Prototype)

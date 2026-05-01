@@ -7,18 +7,20 @@ require("autodestroy.inventory");
 require("autodestroy.tooltip");
 require("autodestroy.powerarmor");
 require("autodestroy.printf");
+require("autodestroy.enemyweight");
 
 -- Perform a 'Total Recall' of active bots when the battle has ended
-function checkAndRecallBots(player, deploy_config, enemy_weight, current_follower_count)
+function checkAndRecallBots(player, deploy_config, enemy_weight_lazy_loader, current_follower_count)
     local debug_print = deploy_config.debug_print;
 
-    -- still enemies in range? wait with recall
-    if (enemy_weight > 0) then
+    -- check if we have following bots to recall
+    if (current_follower_count <= 0) then
         return;
     end
 
-    -- no more enemies, check if we have following bots to recall
-    if (current_follower_count <= 0) then
+    -- still enemies in range? wait with recall
+    enemy_weight = getEnemyWeightLazyLoaded(enemy_weight_lazy_loader);
+    if (enemy_weight > 0) then
         return;
     end
 

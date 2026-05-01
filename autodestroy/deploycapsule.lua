@@ -30,18 +30,10 @@ function checkAndDeployFor(player)
 
     local max_follower_count = player.force.maximum_following_robot_count;
     local current_follower_count = getCurrentFollowerCount(player);
-    local max_deploy_count = max_follower_count - current_follower_count;
+    local enemy_weight_lazy_loader = getEnemyWeightClass(player, deploy_config);
 
-    -- validate: enemies around player require deployment?
-    local enemy_weight = getEnemyWeightAround(player, deploy_config);
     -- check if we can recall bots at this moment that are deployed but no longer needed
-    checkAndRecallBots(player, deploy_config, enemy_weight, current_follower_count);
-    if (enemy_weight <= 0) then
-        if (debug_print and debug_print_noise_reduction) then
-            player.print("Auto Deploy disabled: not enough enemies in range");
-        end;
-        return;
-    end
+    checkAndRecallBots(player, deploy_config, enemy_weight_lazy_loader, current_follower_count);
 
     -- validate: player has enough capsules?
     local player_capsule_count_destroyer = getInventoryCount(player, deploy_config.item_to_consume_destroyer);
@@ -58,12 +50,21 @@ function checkAndDeployFor(player)
     end
 
     -- validate: can we deploy at least 1 capsule based on Max Follower Count vs Current Follower Count?
+    local max_deploy_count = max_follower_count - current_follower_count;
     local can_not_deploy_destroyers = max_deploy_count < math.max(1, deploy_config.entity_deploy_per_capsule_destroyer - deploy_config.max_accepted_wastage);
-    local can_not_deploy_distractors = max_deploy_count < math.max(1, deploy_config.entity_deploy_per_capsule_distractor - deploy_config.max_accepted_wastage);
-    local can_not_deploy_defenders = max_deploy_count < math.max(1, deploy_config.entity_deploy_per_capsule_defender - deploy_config.max_accepted_wastage);
-    if (can_not_deploy_destroyers and can_not_deploy_distractors and can_not_deploy_defenders) then
+    -- only check destoryers here, otherwise possibly defenders and distractors will get mixed in. Proper check would include counting all bots, which might be an expensive filter.
+    if (can_not_deploy_destroyers) then
         if (debug_print and debug_print_noise_reduction) then
             player.print("Auto Deploy disabled: max (acceptable) follower count reached");
+        end;
+        return;
+    end
+
+    -- validate: enemies around player require deployment?
+    enemy_weight = getEnemyWeightLazyLoaded(enemy_weight_lazy_loader);
+    if (enemy_weight <= 0) then
+        if (debug_print and debug_print_noise_reduction) then
+            player.print("Auto Deploy disabled: not enough enemies in range");
         end;
         return;
     end
@@ -156,6 +157,17 @@ function checkAndDeployCapsules(player, deploy_config, deploy_capsule_context)
         end
         return;
     end;
+
+    -- validate: can we deploy at least 1 capsule based on Max Follower Count vs Current Follower Count?
+    local max_deploy_count = max_follower_count - current_follower_count;
+    local can_not_deploy_destroyers = max_deploy_count < math.max(1, deploy_config.entity_deploy_per_capsule_destroyer - deploy_config.max_accepted_wastage);
+    -- only check destoryers here, otherwise possibly defenders and distractors will get mixed in. Proper check would include counting all bots, which might be an expensive filter.
+    if (can_not_deploy_destroyers) then
+        if (debug_print and debug_print_noise_reduction) then
+            player.print("Skipped for bot type: max (acceptable) follower count reached");
+        end;
+        return;
+    end
 
     -- calculate the desired bot count - with no regards for limits
     local destroyers_for_weight = deploy_capsule_context.getDeployCountForWeightFunction(enemy_weight);

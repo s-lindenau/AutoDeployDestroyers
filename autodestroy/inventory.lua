@@ -98,7 +98,7 @@ end
 function processPlayerInventories(player, item, amount, inventoryFunction)
     local remaining = amount;
     -- first: process car trunk if available
-    if (isInSupportedVehicle(player)) then
+    if (remaining > 0 and isInSupportedVehicle(player)) then
         local amount_processed = inventoryFunction(player.vehicle, item, remaining, defines.inventory.car_trunk);
         remaining = remaining - amount_processed;
     end
