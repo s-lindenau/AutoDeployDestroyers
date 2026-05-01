@@ -61,7 +61,7 @@ function checkAndDeployFor(player)
     end
 
     -- validate: enemies around player require deployment?
-    enemy_weight = getEnemyWeightLazyLoaded(enemy_weight_lazy_loader);
+    local enemy_weight = getEnemyWeightLazyLoaded(enemy_weight_lazy_loader);
     if (enemy_weight <= 0) then
         if (debug_print and debug_print_noise_reduction) then
             player.print("Auto Deploy disabled: not enough enemies in range");

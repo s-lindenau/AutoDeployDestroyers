@@ -21,7 +21,7 @@ function checkAndRecallBots(player, deploy_config, enemy_weight_lazy_loader, cur
     end
 
     -- still enemies in range? wait with recall
-    enemy_weight = getEnemyWeightLazyLoaded(enemy_weight_lazy_loader);
+    local enemy_weight = getEnemyWeightLazyLoaded(enemy_weight_lazy_loader);
     if (enemy_weight > 0) then
         return;
     end
