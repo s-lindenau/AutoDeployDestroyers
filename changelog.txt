@@ -1,9 +1,9 @@
 ---------------------------------------------------------------------------------------------------
-Version: 2.1.1
-Date: ??-??-20??
+Version: 2.2.0
+Date: 01-05-2026
   Features:
     - Add recall option to capture deployed bots back into capsules after battle
-    - Add tooltip messages when capsules have been used or restored from/to inventory
+    - Add tooltip messages when capsules have been used from or restored to inventory
   Settings:
     - Add option to enable/disable bot recall
     - Add option to enable/disable tooltip messages
