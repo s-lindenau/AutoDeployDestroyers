@@ -8,7 +8,7 @@ Automatically deploys destroyer, defender or distractor drones based on enemies 
 <img src="thumbnail.png" height="144" width="144" alt="thumbnail">
 
 This mod is for people who love fighting biters with drones, but hate having to manually throw their capsules.  
-This mod will automatically deploy the right amount capsules based on how many enemies are in visibility range.  
+This mod will automatically deploy the right amount of capsules based on how many enemies are in visibility range.  
 Now you can completely focus on the battle!
 
 For a quick overview you can watch the following mod highlight video on YouTube by JD-Plays: https://www.youtube.com/watch?v=qhDUvHGGd08
@@ -33,7 +33,7 @@ For a quick overview you can watch the following mod highlight video on YouTube 
 - `Aggression factor`: determines how many drones are deployed depending on the enemies around the player
 - `Minimum amount of capsules remaining`: when should auto deploy stop (defaults to 20 capsules)
 - `Maximum accepted "wastage" of capsules`: if the mod should wait until you need 5 more drones (1 capsule) to deploy that capsule (or if 4, 3 etc. is also acceptable). Configured as a whole number, that defaults to 1; meaning a capsule will be deployed when 4 more drones are needed. Default totals per capsule are 5 for Destroyers, 3 for Distractors and 1 for Defenders.
-- `Strict Launcher`: if a Destroyer launcher should only launch destroyers, or also previous bot types. Same for Defender and Distractor. Priority for 'previous' is Destroyer -> Defender -> Distractor.
+- `Strict Launcher`: if a Destroyer launcher should only launch destroyers, or also previous bot types. Same for Defender and Distractor. Priority for 'previous' is Destroyer → Defender → Distractor.
 - ... see the in-game "mod settings" menu for more!
 
 #### Upgrade milestones
