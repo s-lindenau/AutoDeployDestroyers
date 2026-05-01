@@ -9,9 +9,9 @@ require("autodestroy.deployweight");
 require("autodestroy.enemyweight");
 require("autodestroy.powerarmor");
 require("autodestroy.inventory");
-require("autodestroy.controltiming");
 require("autodestroy.recall");
 require("autodestroy.tooltip");
+require("autodestroy.debugprint");
 
 -- validates if we can & should deploy more capsules
 -- if so, deploy & consume the capsules
@@ -229,7 +229,7 @@ function checkAndDeployCapsules(player, deploy_config, deploy_capsule_context)
         player.print("Allowed capsules to consume: " .. allowed_capsules_to_consume .. " (inventory capsule count: " .. player_capsule_count .. ", min remaining " .. deploy_config.min_capsules_remaining .. ")")
     end
 
-    local max_capsules_per_pass = getMaxCapsulesToThrow(player, deploy_config, deploy_capsule_context.getNumberOfLaunchersFunction)
+    local max_capsules_per_pass = getMaxCapsulesToProcess(player, deploy_config, deploy_capsule_context.getNumberOfLaunchersFunction)
     if (allowed_capsules_to_consume > max_capsules_per_pass) then
         allowed_capsules_to_consume = max_capsules_per_pass
         if debug_print then
@@ -326,15 +326,6 @@ function isDispatchAllowed(player, deploy_config)
         return math.abs(vehicle_speed) < max_dispatch_vehicle_speed;
     end;
     return true;
-end
-
-function canDebugPrintNoisy()
-    -- Some debug information doesn't need to be printed that often, add a delay factor of {n}
-    local noisy_delay_factor = 10;
-    local check_per_tick = getCheckPerTick();
-    local tick_offset = getTickOffset();
-    local check_per_tick_noisy = check_per_tick * noisy_delay_factor;
-    return ((game.tick + tick_offset) % check_per_tick_noisy == 0);
 end
 
 function getCurrentFollowerCount(player)

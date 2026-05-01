@@ -79,7 +79,7 @@ function isDefenderLauncher(equipment)
     return getPersonalDefenderLauncherName() == equipment.name;
 end
 
-function getMaxCapsulesToThrow(player, deploy_config, getNumberOfLaunchersFunction)
+function getMaxCapsulesToProcess(player, deploy_config, getNumberOfLaunchersFunction)
     local is_strict_launcher = deploy_config.strict_launcher;
     local number_of_launchers = getNumberOfLaunchersFunction(player, is_strict_launcher);
     local capsules_cap = deploy_config.max_capsules_per_pass;

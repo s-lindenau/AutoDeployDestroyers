@@ -8,10 +8,12 @@ require("autodestroy.tooltip");
 require("autodestroy.powerarmor");
 require("autodestroy.printf");
 require("autodestroy.enemyweight");
+require("autodestroy.debugprint");
 
 -- Perform a 'Total Recall' of active bots when the battle has ended
 function checkAndRecallBots(player, deploy_config, enemy_weight_lazy_loader, current_follower_count)
     local debug_print = deploy_config.debug_print;
+    local debug_print_noise_reduction = canDebugPrintNoisy();
 
     -- check if we have following bots to recall
     if (current_follower_count <= 0) then
@@ -69,19 +71,19 @@ function checkAndRecallBots(player, deploy_config, enemy_weight_lazy_loader, cur
     recall_context[deploy_config.entity_to_deploy_distractor] = getLifetimeThresholdForBotType(player, deploy_config, distractor_prototype);
 
     -- group bots that can be recalled by type and count the number of capsules
-    local bot_statistics = getCapsuleCountPerBotType(player, deploy_config, recall_context, bots, units_per_capsule);
+    local bot_statistics = getCapsuleCountPerBotType(player, deploy_config, recall_context, bots, units_per_capsule, debug_print_noise_reduction);
 
     -- if we reach here, there are still follower bots on the player, but they may not be in range to recall
     local bots_in_range = bot_statistics.total_bots;
     if (bots_in_range < 1) then
-        if (debug_print) then
+        if (debug_print and debug_print_noise_reduction) then
             player.print(" -- Recall: active bots are outside recall range. Move closer to collect!")
         end
         return;
     end
 
     -- recall the bots, insert the capsules back in the inventory, and destroy the corresponding bot entities
-    recallBots(player, deploy_config, bot_statistics, units_per_capsule);
+    recallBots(player, deploy_config, bot_statistics, units_per_capsule, debug_print_noise_reduction);
 end
 
 function getLifetimeThresholdForBotType(player, deploy_config, bot_prototype)
@@ -101,7 +103,7 @@ function getLifetimeThresholdForBotType(player, deploy_config, bot_prototype)
     }
 end
 
-function getCapsuleCountPerBotType(player, deploy_config, recall_context, bots, units_per_capsule)
+function getCapsuleCountPerBotType(player, deploy_config, recall_context, bots, units_per_capsule, debug_print_noise_reduction)
     local bot_statistics = {}
     bot_statistics.total_bots = #bots;
     bot_statistics.total_capsules = 0; -- initial value, updated in this function
@@ -114,7 +116,7 @@ function getCapsuleCountPerBotType(player, deploy_config, recall_context, bots, 
 
     -- Count bots by type that can be recalled
     for _, bot in pairs(bots) do
-        if canRecallBot(player, deploy_config, recall_context, bot) then
+        if canRecallBot(player, deploy_config, recall_context, bot, debug_print_noise_reduction) then
             local bot_name = bot.name;
             bot_counts[bot_name] = (bot_counts[bot_name] or 0) + 1;
             table.insert(bots_per_type[bot_name], bot);
@@ -137,7 +139,7 @@ function getCapsuleCountPerBotType(player, deploy_config, recall_context, bots, 
     return bot_statistics
 end
 
-function canRecallBot(player, deploy_config, recall_context, bot)
+function canRecallBot(player, deploy_config, recall_context, bot, debug_print_noise_reduction)
     local bot_recall_context = recall_context[bot.name];
 
     local base_life = bot_recall_context.base_life;
@@ -149,7 +151,7 @@ function canRecallBot(player, deploy_config, recall_context, bot)
     local current_life = bot.time_to_live;
 
     -- Factorio filters and only shows unique messages per x seconds, so this won't spam too much
-    if (deploy_config.debug_print) then
+    if (deploy_config.debug_print and debug_print_noise_reduction) then
         local message = " -- Recall: %s base_life=%s modifier=%s max_life=%s current_life=%s threshold=%s";
         printf(player, message, bot.name, base_life, modifier, max_life, current_life, lifetime_threshold);
     end
@@ -160,7 +162,7 @@ function canRecallBot(player, deploy_config, recall_context, bot)
     return true;
 end
 
-function recallBots(player, deploy_config, bot_statistics, units_per_capsule)
+function recallBots(player, deploy_config, bot_statistics, units_per_capsule, debug_print_noise_reduction)
     local debug_print = deploy_config.debug_print;
     local capsule_counts = bot_statistics.capsule_counts;
 
@@ -175,18 +177,20 @@ function recallBots(player, deploy_config, bot_statistics, units_per_capsule)
     number_of_launchers_function_per_type[deploy_config.entity_to_deploy_destroyer] = getNumberOfDestroyerLaunchers;
 
     local tooltip_offset = 0;
+    local total_inserted_count = 0;
     for bot_type, capsule_count in pairs(capsule_counts) do
         local capsule_type = capsules_per_type[bot_type]
 
-        local max_capsules_per_pass = getMaxCapsulesToThrow(player, deploy_config, number_of_launchers_function_per_type[bot_type]);
+        local max_capsules_per_pass = getMaxCapsulesToProcess(player, deploy_config, number_of_launchers_function_per_type[bot_type]);
         if (capsule_count > max_capsules_per_pass) then
             capsule_count = max_capsules_per_pass;
-            if debug_print then
-                player.print("Max capsules per pass limit exceeded - limiting to " .. max_capsules_per_pass)
+            if debug_print and (total_inserted_count > 0 or debug_print_noise_reduction) then
+                player.print(" -- Recall: Max capsules per pass limit exceeded - limiting to " .. max_capsules_per_pass)
             end
         end
 
         local inserted_count = insertIntoInventory(player, capsule_type, capsule_count);
+        total_inserted_count = total_inserted_count + inserted_count;
 
         if (inserted_count >= 1) then
             showTooltipInsertedSuccessful(player, deploy_config, capsule_type, inserted_count, tooltip_offset);
@@ -195,8 +199,14 @@ function recallBots(player, deploy_config, bot_statistics, units_per_capsule)
             destroyRecalledBots(bot_statistics, bot_type, inserted_count, units_per_capsule);
         end
 
-        if debug_print then
+        if debug_print and (inserted_count > 0 or debug_print_noise_reduction) then
             player.print(" -- Recall: bot type = " .. bot_type .. ", total number of " .. capsule_type .. ": " .. capsule_count .. ", recalled: " .. inserted_count)
+        end
+    end
+
+    if debug_print and debug_print_noise_reduction then
+        if total_inserted_count < 1 and bot_statistics.total_bots > 0 then
+            player.print(" -- Recall: bots current_life < threshold, no launchers or not enough to fill one capsule");
         end
     end
 end
