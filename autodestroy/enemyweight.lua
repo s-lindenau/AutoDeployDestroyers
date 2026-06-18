@@ -76,7 +76,7 @@ function getEnemyWeightAround(player, deploy_config)
 
     if (debug_log == true) then
         debug_contents = debug_contents .. "============ Total: " .. total_enemy_weight .. " ============\r\n";
-        game.write_file("AutoDeployDestroyers.log", debug_contents);
+        helpers.write_file("AutoDeployDestroyers.log", debug_contents);
     end
 
     return total_enemy_weight;
