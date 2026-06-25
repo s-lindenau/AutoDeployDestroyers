@@ -153,7 +153,7 @@ data:extend({
         type = "int-setting",
         name = getBotRecallRangeKey(),
         setting_type = "startup",
-        default_value = 5,
+        default_value = 15,
         minimum_value = 1,
         maximum_value = 100,
         order = "amb"
